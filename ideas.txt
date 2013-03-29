@@ -1,0 +1,23 @@
+====================
+-----SoundCraft-----
+====================
+
+Sound Cables
+	ID: 	1650
+	DATA: 	000-000000-00000
+	RENDER: 300
+	Types:
+		- Copper
+		- Tin
+		- Silver
+		- Iron
+		- Gold
+	Position:
+		- North
+		- East
+		- South
+		- West
+		- Up
+		- Down
+	Colors:
+		No color or one of the 16 Minecraft colors
