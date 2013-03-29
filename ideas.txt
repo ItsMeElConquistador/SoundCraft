@@ -21,3 +21,6 @@ Sound Cables
 		- Down
 	Colors:
 		No color or one of the 16 Minecraft colors
+		
+Speakers
+Radio
