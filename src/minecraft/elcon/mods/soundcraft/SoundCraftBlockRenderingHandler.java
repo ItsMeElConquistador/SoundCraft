@@ -14,11 +14,11 @@ public class SoundCraftBlockRenderingHandler implements ISimpleBlockRenderingHan
 	}
 
 	@Override
-	public boolean renderWorldBlock(IBlockAccess world, int x, int y, int z, Block block, int renderID, RenderBlocks renderer) {
+	public boolean renderWorldBlock(IBlockAccess blockAccess, int x, int y, int z, Block block, int renderID, RenderBlocks renderer) {
 		if(renderID == SoundCraftConfig.soundCableRenderID) {
 			BlockSoundCable blockSoundCable = (BlockSoundCable) block;
-			int meta = world.getBlockMetadata(x, y, z);
-			TileEntitySoundCable te = (TileEntitySoundCable) world.getBlockTileEntity(x, y, z);
+			int meta = blockAccess.getBlockMetadata(x, y, z);
+			TileEntitySoundCable te = (TileEntitySoundCable) blockAccess.getBlockTileEntity(x, y, z);
 			
 			renderer.renderAllFaces = true;
 			renderer.setOverrideBlockTexture(SoundCableType.soundCables[meta].textures[te.color]);
@@ -53,6 +53,8 @@ public class SoundCraftBlockRenderingHandler implements ISimpleBlockRenderingHan
 			
 			renderer.renderAllFaces = false;
 			renderer.clearOverrideBlockTexture();
+			
+			blockSoundCable.setBlockBoundsBasedOnState(blockAccess, x, y, z);
 			
 			return true;
 		}

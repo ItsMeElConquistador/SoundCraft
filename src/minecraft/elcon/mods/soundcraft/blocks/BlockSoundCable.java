@@ -1,11 +1,17 @@
 package elcon.mods.soundcraft.blocks;
 
+import java.util.List;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.Entity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.Icon;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
@@ -19,6 +25,81 @@ public class BlockSoundCable extends BlockContainer {
 
 	public BlockSoundCable(int i) {
 		super(i, Material.cloth);
+	}
+	
+	public AxisAlignedBB getSelectedBoundingBoxFromPool(World world, int x, int y, int z){
+        TileEntitySoundCable te = (TileEntitySoundCable) world.getBlockTileEntity(x, y, z);
+		if(te == null) {
+			te = new TileEntitySoundCable();
+			world.setBlockTileEntity(x, y, z, te);
+		}
+		double minX = 0.0625F * 6;
+		double minY = 0.0625F * 6;
+		double minZ = 0.0625F * 6;
+		double maxX = 0.0625F * 10;
+		double maxY = 0.0625F * 10;
+		double maxZ = 0.0625F * 10;
+		
+		if(te.directions[0]) {
+			minX = 0.0;
+		}
+		if(te.directions[1]) {
+			maxX = 1.0;
+		}
+		if(te.directions[2]) {
+			minY = 0.0;
+		}
+		if(te.directions[3]) {
+			maxY = 1.0;
+		}
+		if(te.directions[4]) {
+			minZ = 0.0;
+		}
+		if(te.directions[5]) {
+			maxZ = 1.0;
+		}
+		return AxisAlignedBB.getAABBPool().getAABB(x + minX, y + minY, z + minZ, x + maxX, y + maxY, z + maxZ);
+    }
+	
+	public void setBlockBoundsBasedOnState(IBlockAccess blockAccess, int x, int y, int z) {
+		TileEntitySoundCable te = (TileEntitySoundCable) blockAccess.getBlockTileEntity(x, y, z);
+		if(te == null) {
+			te = new TileEntitySoundCable();
+		}
+		float minX = 0.0625F * 6;
+		float minY = 0.0625F * 6;
+		float minZ = 0.0625F * 6;
+		float maxX = 0.0625F * 10;
+		float maxY = 0.0625F * 10;
+		float maxZ = 0.0625F * 10;
+		
+		if(te.directions[0]) {
+			minX = 0.0F;
+		}
+		if(te.directions[1]) {
+			maxX = 1.0F;
+		}
+		if(te.directions[2]) {
+			minY = 0.0F;
+		}
+		if(te.directions[3]) {
+			maxY = 1.0F;
+		}
+		if(te.directions[4]) {
+			minZ = 0.0F;
+		}
+		if(te.directions[5]) {
+			maxZ = 1.0F;
+		}
+		setBlockBounds(minX, minY, minZ, maxX, maxY, maxZ);
+	}
+	
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void getSubBlocks(int i, CreativeTabs creativeTabs, List list) {
+		for(SoundCableType type : SoundCableType.soundCables) {
+			list.add(new ItemStack(blockID, 1, type.id));
+		}
 	}
 
 	@Override
@@ -362,6 +443,6 @@ public class BlockSoundCable extends BlockContainer {
 	public void onNeighborBlockChange(World world, int x, int y, int z, int par5) {
 		if(!world.isRemote) {
 			//updateCable(world, x, y, z);
-		}
+		} 
 	}
 }
