@@ -22,7 +22,7 @@ public class SoundCraftBlockRenderingHandler implements ISimpleBlockRenderingHan
 			boolean[] directions = BlockSoundCable.getDirectionsFromMetadata(meta);
 			int color = BlockSoundCable.getColorFromMetadata(meta);
 			
-			System.out.println(Integer.toString(meta, 2) + ": " + type + " - " + color);
+			//System.out.println(Integer.toString(meta, 2) + ": " + type + " - " + color);
 			
 			renderer.renderAllFaces = true;
 			renderer.setOverrideBlockTexture(SoundCableType.soundCables[type].textures[color]);
@@ -30,12 +30,12 @@ public class SoundCraftBlockRenderingHandler implements ISimpleBlockRenderingHan
 			renderer.setRenderBounds(pixels(6), pixels(6), pixels(6), pixels(10), pixels(10), pixels(10));
 			renderer.renderStandardBlock(blockSoundCable, x, y, z);
 			
-			System.out.println(directions[0]);
+			/*System.out.println(directions[0]);
 			System.out.println(directions[1]);
 			System.out.println(directions[2]);
 			System.out.println(directions[3]);
 			System.out.println(directions[4]);
-			System.out.println(directions[5]);
+			System.out.println(directions[5]);*/
 			
 			if(directions[0]) {
 				renderer.setRenderBounds(pixels(0), pixels(6), pixels(6), pixels(6), pixels(10), pixels(10));

@@ -80,10 +80,9 @@ public class BlockSoundCable extends BlockContainer {
 			if(i < j) {
 				c[i] = '0';
 			} else {
-				c[i] = s.charAt(13 - i);
+				c[i] = s.charAt(j - i);
 			}
 		}
-		System.out.println(String.valueOf(c));
 		return String.valueOf(c);
 	}
 	
@@ -92,6 +91,7 @@ public class BlockSoundCable extends BlockContainer {
 	}
 	
 	public static boolean[] getDirectionsFromMetadata(int meta) {
+		System.out.println(decToBin(meta));
 		boolean[] directions = new boolean[6];
 		String direction = decToBin(meta).substring(4, 10);
 		for(int i = 0; i<6; i++) {
@@ -115,8 +115,6 @@ public class BlockSoundCable extends BlockContainer {
 	
 	public void updateCable(World world, int x, int y, int z) {
 		int data = world.getBlockMetadata(x, y, z);
-		
-		System.out.println("updating cable at: " + x + "," + y + "," + z);
 		
 		if(world.getBlockId(x - 1, y, z) == blockID && isCableEqual(data, world.getBlockMetadata(x - 1, y, z))) {
 			world.setBlockMetadataWithNotify(x, y, z, data | 8, 2);
