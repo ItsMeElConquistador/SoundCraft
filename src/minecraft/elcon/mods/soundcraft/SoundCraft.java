@@ -16,8 +16,10 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
+import elcon.mods.soundcraft.blocks.BlockAdvancedJukebox;
 import elcon.mods.soundcraft.blocks.BlockSoundCable;
 import elcon.mods.soundcraft.blocks.BlockSpeaker;
+import elcon.mods.soundcraft.blocks.TileEntityAdvancedJukebox;
 import elcon.mods.soundcraft.blocks.TileEntitySoundCable;
 import elcon.mods.soundcraft.blocks.TileEntitySpeaker;
 
@@ -37,6 +39,7 @@ public class SoundCraft {
 	
 	public static Block soundCable;
 	public static Block speaker;
+	public static Block advancedJukebox;
 	
 	@PreInit
 	public void preInit(FMLPreInitializationEvent event) {
@@ -53,18 +56,22 @@ public class SoundCraft {
 		//init blocks
 		soundCable = new BlockSoundCable(SoundCraftConfig.soundCableID).setStepSound(Block.soundClothFootstep).setHardness(0.8F).setCreativeTab(tabSoundCraft).setUnlocalizedName("soundCable");
 		speaker = new BlockSpeaker(SoundCraftConfig.speakerID).setStepSound(Block.soundMetalFootstep).setHardness(5.0F).setResistance(10.0F).setCreativeTab(tabSoundCraft).setUnlocalizedName("speaker");
+		advancedJukebox = new BlockAdvancedJukebox(SoundCraftConfig.advancedJukeboxID).setStepSound(Block.soundMetalFootstep).setHardness(5.0F).setResistance(10.0F).setCreativeTab(tabSoundCraft).setUnlocalizedName("advancedJukebox");
 		
 		//register blocks
 		GameRegistry.registerBlock(soundCable, "SoundCraft_soundCable");
 		GameRegistry.registerBlock(speaker, "SoundCraft_speaker");
+		GameRegistry.registerBlock(advancedJukebox, "SoundCraft_advancedJukebox");
 		
 		//register tileentities
 		GameRegistry.registerTileEntity(TileEntitySoundCable.class, "SoundCable");
 		GameRegistry.registerTileEntity(TileEntitySpeaker.class, "Speaker");
+		GameRegistry.registerTileEntity(TileEntityAdvancedJukebox.class, "AdvancedJukebox");
 		
 		//add block names
 		LanguageRegistry.addName(soundCable, "Sound Cable");
 		LanguageRegistry.addName(speaker, "Speaker");
+		LanguageRegistry.addName(advancedJukebox, "Advanced Jukebox");
 		
 		//add localizations
 		LanguageRegistry.instance().addStringLocalization("itemGroup.SoundCraft", "SoundCraft");
