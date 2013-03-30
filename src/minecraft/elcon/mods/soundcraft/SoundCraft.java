@@ -17,6 +17,7 @@ import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
 import elcon.mods.soundcraft.blocks.BlockSoundCable;
+import elcon.mods.soundcraft.blocks.BlockSpeaker;
 import elcon.mods.soundcraft.blocks.TileEntitySoundCable;
 
 @Mod(modid = "SoundCraft", name = "SoundCraft", version = "1.0.0")
@@ -34,6 +35,7 @@ public class SoundCraft {
 	public static CreativeTabs tabSoundCraft = new CreativeTabSoundCraft("SoundCraft");
 	
 	public static Block soundCable;
+	public static Block speaker;
 	
 	@PreInit
 	public void preInit(FMLPreInitializationEvent event) {
@@ -49,15 +51,18 @@ public class SoundCraft {
 		
 		//init blocks
 		soundCable = new BlockSoundCable(SoundCraftConfig.soundCableID).setStepSound(Block.soundClothFootstep).setHardness(0.8F).setCreativeTab(tabSoundCraft).setUnlocalizedName("soundCable");
-	
+		speaker = new BlockSpeaker(SoundCraftConfig.speakerID).setStepSound(Block.soundMetalFootstep).setHardness(5.0F).setResistance(10.0F).setCreativeTab(tabSoundCraft).setUnlocalizedName("speaker");
+		
 		//register blocks
 		GameRegistry.registerBlock(soundCable, "SoundCraft_soundCable");
-
+		GameRegistry.registerBlock(speaker, "SoundCraft_speaker");
+		
 		//register tileentities
 		GameRegistry.registerTileEntity(TileEntitySoundCable.class, "SoundCable");
 		
 		//add block names
 		LanguageRegistry.addName(soundCable, "Sound Cable");
+		LanguageRegistry.addName(speaker, "Speaker");
 		
 		//add localizations
 		LanguageRegistry.instance().addStringLocalization("itemGroup.SoundCraft", "SoundCraft");

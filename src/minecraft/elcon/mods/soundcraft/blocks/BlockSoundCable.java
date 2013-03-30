@@ -110,6 +110,10 @@ public class BlockSoundCable extends BlockContainer {
 				world.markBlockForRenderUpdate(x, y, z);
 				world.markBlockForUpdate(x - 1, y, z);
 			}
+		} else {
+			te.directions[0] = false;
+			world.setBlockTileEntity(x, y, z, te);
+			world.markBlockForUpdate(x, y, z);
 		}
 		if(world.getBlockId(x + 1, y, z) == blockID) {
 			t = (TileEntitySoundCable) world.getBlockTileEntity(x + 1, y, z);
@@ -125,7 +129,11 @@ public class BlockSoundCable extends BlockContainer {
 				world.markBlockForRenderUpdate(x, y, z);
 				world.markBlockForUpdate(x + 1, y, z);
 			}
-		}
+		} else {
+				te.directions[1] = false;
+				world.setBlockTileEntity(x, y, z, te);
+				world.markBlockForUpdate(x, y, z);
+			}
 		if(world.getBlockId(x, y - 1, z) == blockID) {
 			t = (TileEntitySoundCable) world.getBlockTileEntity(x, y - 1, z);
 			if(t == null) {
@@ -140,6 +148,10 @@ public class BlockSoundCable extends BlockContainer {
 				world.markBlockForRenderUpdate(x, y, z);
 				world.markBlockForUpdate(x, y - 1, z);
 			}
+		} else {
+			te.directions[2] = false;
+			world.setBlockTileEntity(x, y, z, te);
+			world.markBlockForUpdate(x, y, z);
 		}
 		if(world.getBlockId(x, y + 1, z) == blockID) {
 			t = (TileEntitySoundCable) world.getBlockTileEntity(x, y + 1, z);
@@ -155,7 +167,11 @@ public class BlockSoundCable extends BlockContainer {
 				world.markBlockForRenderUpdate(x, y, z);
 				world.markBlockForUpdate(x, y + 1, z);
 			}
-		}
+		} else {
+				te.directions[3] = false;
+				world.setBlockTileEntity(x, y, z, te);
+				world.markBlockForUpdate(x, y, z);
+			}
 		if(world.getBlockId(x, y, z - 1) == blockID) {
 			t = (TileEntitySoundCable) world.getBlockTileEntity(x, y, z - 1);
 			if(t == null) {
@@ -170,6 +186,10 @@ public class BlockSoundCable extends BlockContainer {
 				world.markBlockForRenderUpdate(x, y, z);
 				world.markBlockForUpdate(x, y, z - 1);
 			} 
+		} else {
+			te.directions[4] = false;
+			world.setBlockTileEntity(x, y, z, te);
+			world.markBlockForUpdate(x, y, z);
 		}
 		if(world.getBlockId(x, y, z + 1) == blockID) {
 			t = (TileEntitySoundCable) world.getBlockTileEntity(x, y, z + 1);
@@ -185,9 +205,13 @@ public class BlockSoundCable extends BlockContainer {
 				world.markBlockForRenderUpdate(x, y, z);
 				world.markBlockForUpdate(x, y, z + 1);
 			}
+		} else {
+			te.directions[5] = false;
+			world.setBlockTileEntity(x, y, z, te);
+			world.markBlockForUpdate(x, y, z);
 		}
 		world.setBlockTileEntity(x, y, z, te);
-		world.markBlockForRenderUpdate(x, y, z);
+		world.markBlockForUpdate(x, y, z);
 		
 		//notifyCableNeighbors(world, x, y, z);
 	}
