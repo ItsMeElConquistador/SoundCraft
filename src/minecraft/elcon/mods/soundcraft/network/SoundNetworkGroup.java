@@ -9,6 +9,10 @@ public class SoundNetworkGroup {
 	public ArrayList<ISoundSource> sources = new ArrayList<ISoundSource>();
 	public ArrayList<ISoundAcceptor> acceptors = new ArrayList<ISoundAcceptor>();
 	
+	public SoundNetworkGroup(int i) {
+		id = i;
+	}
+	
 	public void sendSound(ISoundSource source, Sound sound) {
 		if(sources.contains(source)) {
 			for(ISoundAcceptor acceptor : acceptors) {

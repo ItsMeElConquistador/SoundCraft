@@ -1,6 +1,5 @@
 package elcon.mods.soundcraft.network;
 
-public abstract interface ISoundSource {
+public interface ISoundSource {
 
-	public SoundNetworkGroup group = null;
 }

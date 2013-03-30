@@ -3,10 +3,30 @@ package elcon.mods.soundcraft.network;
 import java.util.HashMap;
 
 import elcon.mods.soundcraft.Coordinates;
+import elcon.mods.soundcraft.blocks.TileEntitySoundObject;
 
 public class SoundNetwork {
 
 	public static HashMap<Coordinates, SoundNetworkGroup> groups = new HashMap<Coordinates, SoundNetworkGroup>();
+	
+	public static int findGroupID() {
+		int id = 0;
+		int oldID = 0;
+		int highest = 0;
+		for(SoundNetworkGroup group : groups.values()) {
+			if(group != null) {
+				id = group.id;
+				if(id != 0 && id != (oldID + 1)) {
+					return oldID + 1;
+				}
+				oldID = id;
+				if(id > highest) {
+					highest = id;
+				}
+			}
+		}
+		return highest + 1;
+	}
 	
 	public static void addGroup(int x, int y, int z, SoundNetworkGroup group) {
 		groups.put(new Coordinates(x, y, z), group);
@@ -20,6 +40,17 @@ public class SoundNetwork {
 		return null;
 	}
 	
+	public static SoundNetworkGroup getGroup(int id) {
+		for(SoundNetworkGroup group : groups.values()) {
+			if(group != null) {
+				if(id == group.id) {
+					return group;
+				}
+			}
+		}
+		return null;
+	}
+	
 	public static void removeGroup(int x, int y, int z) {
 		Coordinates c = new Coordinates(x, y, z);
 		if(groups.containsKey(c)) {
@@ -27,7 +58,7 @@ public class SoundNetwork {
 		}
 	}
 	
-	public static void mergeGroups(SoundNetworkGroup group1, SoundNetworkGroup group2) {
+	public static SoundNetworkGroup mergeGroups(SoundNetworkGroup group1, SoundNetworkGroup group2) {
 		for(ISoundSource source : group2.sources) {
 			group1.sources.add(source);
 		}
@@ -36,9 +67,84 @@ public class SoundNetwork {
 		}
 		group2.sources = null;
 		group2.acceptors = null;
+		return group1;
 	}
 	
-	public static void connectGroups(int x1, int y1, int z1, int x2, int y2, int z2) {
+	public static boolean hasGroup(int x, int y, int z) {
+		return getGroup(x, y, z) != null;
+	}
+	
+	public static void connectGroups(TileEntitySoundObject obj1, int x1, int y1, int z1, TileEntitySoundObject obj2, int x2, int y2, int z2) {
+		System.out.println("connecting " + obj1 + " to " + obj2);
+		boolean hasGroup1 = hasGroup(x1, y1, z1);
+		boolean hasGroup2 = hasGroup(x2, y2, z2);
+		if(hasGroup1 && hasGroup2) {
+			SoundNetworkGroup group1 = getGroup(x1, y1, z1);
+			SoundNetworkGroup group2 = getGroup(x2, y2, z2);
+			if(group1.id < group2.id) {
+				SoundNetworkGroup group = mergeGroups(group1, group2);
+				obj2.group = group;
+			} else {
+				SoundNetworkGroup group = mergeGroups(group2, group1);
+				obj1.group = group;
+			}
+		} else if(!hasGroup1 && !hasGroup2) {
+			SoundNetworkGroup group = new SoundNetworkGroup(findGroupID());
+			if(obj1 instanceof ISoundAcceptor) {
+				group.acceptors.add((ISoundAcceptor) obj1);
+			} else if(obj1 instanceof ISoundSource) {
+				group.sources.add((ISoundSource) obj1);
+			}
+			if(obj2 instanceof ISoundAcceptor) {
+				group.acceptors.add((ISoundAcceptor) obj2);
+			} else if(obj2 instanceof ISoundSource) {
+				group.sources.add((ISoundSource) obj2);
+			}
+			obj1.group = group;
+			obj2.group = group;
+		} else if(hasGroup1 && !hasGroup2) {
+			SoundNetworkGroup group = getGroup(x1, y1, z1);
+			
+			if(obj2 instanceof ISoundAcceptor) {
+				group.acceptors.add((ISoundAcceptor) obj2);
+			} else if(obj2 instanceof ISoundSource) {
+				group.sources.add((ISoundSource) obj2);
+			}
+			obj2.group = group;
+		} else if(!hasGroup1 && hasGroup2) {
+			SoundNetworkGroup group = getGroup(x2, y2, z2);
+			
+			if(obj1 instanceof ISoundAcceptor) {
+				group.acceptors.add((ISoundAcceptor) obj1);
+			} else if(obj1 instanceof ISoundSource) {
+				group.sources.add((ISoundSource) obj1);
+			}
+			obj1.group = group;
+		}
+	}
+	
+	public static void unconnectGroups() {
+		//TODO: check if two groups should be split
+	}
+	
+	public static void unconnectFromGroup(TileEntitySoundObject obj, int x, int y, int z) {
+		boolean hasGroup = hasGroup(x, y, z);
+		if(hasGroup) {
+			SoundNetworkGroup group = getGroup(x, y, z);
+			if(obj instanceof ISoundAcceptor) {
+				group.acceptors.remove(obj);
+			} else if(obj instanceof ISoundSource) {
+				group.sources.remove(obj);
+			}
+			obj.group = null;
+		}
+	}
+	
+	public static void load() {
+		
+	}
+	
+	public static void save() {
 		
 	}
 }

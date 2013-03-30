@@ -7,11 +7,18 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.tileentity.TileEntity;
+import elcon.mods.soundcraft.network.ISoundConductor;
+import elcon.mods.soundcraft.network.Sound;
 
-public class TileEntitySoundCable extends TileEntity {
+public class TileEntitySoundCable extends TileEntity implements ISoundConductor {
 
 	public int color = 0;
 	public boolean[] directions = new boolean[6];
+	
+	@Override
+	public boolean canConductSound(Sound sound) {
+		return true;
+	}
 	
 	@Override
 	public Packet getDescriptionPacket() {

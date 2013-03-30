@@ -1,10 +1,8 @@
 package elcon.mods.soundcraft.network;
 
-public abstract interface ISoundAcceptor {
-
-	public SoundNetworkGroup group = null;
+public interface ISoundAcceptor {
 	
-	public abstract boolean canAcceptSound(Sound sound);
+	public boolean canAcceptSound(Sound sound);
 	
-	public abstract void receiveSound(Sound sound);
+	public void receiveSound(Sound sound);
 }

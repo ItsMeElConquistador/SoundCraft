@@ -2,13 +2,10 @@ package elcon.mods.soundcraft.blocks;
 
 import java.util.List;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
@@ -20,6 +17,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import elcon.mods.soundcraft.SoundCableType;
 import elcon.mods.soundcraft.SoundCraftConfig;
+import elcon.mods.soundcraft.network.SoundNetwork;
 
 public class BlockSoundCable extends BlockContainer {
 
@@ -195,6 +193,9 @@ public class BlockSoundCable extends BlockContainer {
 			
 			world.markBlockForUpdate(x2, y2, z2);
 		}
+		TileEntitySoundObject obj1 = (TileEntitySoundObject) world.getBlockTileEntity(x1, y1, z1);
+		TileEntitySoundObject obj2 = (TileEntitySoundObject) world.getBlockTileEntity(x2, y2, z2);
+		SoundNetwork.connectGroups(obj1, x1, y1, z1, obj2, x2, y2, z2);
 	}
 	
 	public void unconnectCable(World world, int x1, int y1, int z1, int x2, int y2, int z2, int direction1, int direction2) {
@@ -222,6 +223,9 @@ public class BlockSoundCable extends BlockContainer {
 			
 			world.markBlockForUpdate(x2, y2, z2);
 		}
+		TileEntitySoundObject obj1 = (TileEntitySoundObject) world.getBlockTileEntity(x1, y1, z1);
+		TileEntitySoundObject obj2 = (TileEntitySoundObject) world.getBlockTileEntity(x2, y2, z2);
+		//SoundNetwork.unconnectGroups(obj1, x1, y1, z1, obj2, x2, y2, z2);
 	}
 	
 	public boolean canConnectToCable(World world, int x1, int y1, int z1, int x2, int y2, int z2) {
