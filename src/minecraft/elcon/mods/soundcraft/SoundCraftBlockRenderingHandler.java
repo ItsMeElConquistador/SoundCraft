@@ -18,8 +18,45 @@ public class SoundCraftBlockRenderingHandler implements ISimpleBlockRenderingHan
 			BlockSoundCable blockSoundCable = (BlockSoundCable) block;
 			
 			int meta = world.getBlockMetadata(x, y, z);
+			int type = BlockSoundCable.getTypeFromMetadata(meta);
+			boolean[] directions = BlockSoundCable.getDirectionsFromMetadata(meta);
+			int color = BlockSoundCable.getColorFromMetadata(meta);
 			
-			//renderer.setRenderBounds(1 / 16);
+			renderer.renderAllFaces = true;
+			renderer.setOverrideBlockTexture(SoundCableType.soundCables[type].textures[color]);
+			
+			renderer.setRenderBounds(pixels(6), pixels(6), pixels(6), pixels(10), pixels(10), pixels(10));
+			renderer.renderStandardBlock(blockSoundCable, x, y, z);
+			
+			if(directions[0]) {
+				renderer.setRenderBounds(pixels(0), pixels(6), pixels(6), pixels(6), pixels(10), pixels(10));
+				renderer.renderStandardBlock(blockSoundCable, x, y, z);
+			}
+			if(directions[1]) {
+				renderer.setRenderBounds(pixels(10), pixels(6), pixels(6), pixels(16), pixels(10), pixels(10));
+				renderer.renderStandardBlock(blockSoundCable, x, y, z);
+			}
+			if(directions[2]) {
+				renderer.setRenderBounds(pixels(6), pixels(0), pixels(6), pixels(10), pixels(6), pixels(10));
+				renderer.renderStandardBlock(blockSoundCable, x, y, z);
+			}
+			if(directions[3]) {
+				renderer.setRenderBounds(pixels(6), pixels(10), pixels(6), pixels(10), pixels(16), pixels(10));
+				renderer.renderStandardBlock(blockSoundCable, x, y, z);
+			}
+			if(directions[4]) {
+				renderer.setRenderBounds(pixels(6), pixels(6), pixels(0), pixels(10), pixels(10), pixels(6));
+				renderer.renderStandardBlock(blockSoundCable, x, y, z);
+			}
+			if(directions[5]) {
+				renderer.setRenderBounds(pixels(6), pixels(6), pixels(10), pixels(10), pixels(10), pixels(16));
+				renderer.renderStandardBlock(blockSoundCable, x, y, z);
+			}
+			
+			renderer.renderAllFaces = false;
+			renderer.clearOverrideBlockTexture();
+			
+			return true;
 		}
 		
 		return false;
@@ -35,4 +72,7 @@ public class SoundCraftBlockRenderingHandler implements ISimpleBlockRenderingHan
 		return SoundCraftConfig.soundCableRenderID;
 	}
 
+	public float pixels(int i) {
+		return (float) ((1 / 16) * i);
+	}
 }

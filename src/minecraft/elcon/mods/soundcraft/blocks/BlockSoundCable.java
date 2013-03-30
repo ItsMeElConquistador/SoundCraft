@@ -12,7 +12,7 @@ import net.minecraft.world.World;
 
 public class BlockSoundCable extends BlockContainer {
 
-	protected BlockSoundCable(int i) {
+	public BlockSoundCable(int i) {
 		super(i, Material.cloth);
 	}
 
