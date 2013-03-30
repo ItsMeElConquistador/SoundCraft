@@ -15,11 +15,13 @@ public class SoundCableType {
 	
 	public int id;
 	public String name;
-	public Icon[] textures = new Icon[17];
+	public Icon[] textures = new Icon[16];
 	
 	public SoundCableType(int i, String n) {
 		id = i;
 		name = n;
+		
+		soundCables[i] = this;
 	}
 	
 	public static void registerIcons(IconRegister iconRegister) {
@@ -31,8 +33,7 @@ public class SoundCableType {
 	}
 	
 	public void registerIcon(IconRegister iconRegister) {
-		textures[0] = iconRegister.registerIcon("soundcraft:soundCable" + name);
-		for(int i = 1; i < 17; i++) {
+		for(int i = 0; i < 16; i++) {
 			textures[i] = iconRegister.registerIcon("soundcraft:soundCable" + name + Integer.toString(i));
 		}
 	}

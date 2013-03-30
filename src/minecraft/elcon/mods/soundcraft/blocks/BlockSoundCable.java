@@ -8,6 +8,7 @@ import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.Icon;
 import net.minecraft.world.World;
 
 public class BlockSoundCable extends BlockContainer {
@@ -25,6 +26,12 @@ public class BlockSoundCable extends BlockContainer {
 	@SideOnly(Side.CLIENT)
 	public void registerIcons(IconRegister iconRegister) {
 		SoundCableType.registerIcons(iconRegister);
+	}
+	
+	@Override
+	@SideOnly(Side.CLIENT)
+	public Icon getBlockTextureFromSideAndMetadata(int i, int j) {
+		return SoundCableType.soundCables[getTypeFromMetadata(i)].textures[getColorFromMetadata(i)];
 	}
 	
 	@Override
@@ -65,7 +72,7 @@ public class BlockSoundCable extends BlockContainer {
 	
 	private static String decToBin(int data) {
 		String s = Integer.toString(data);
-		while(14 - s.length() > 0) {
+		while(13 - s.length() > 0) {
 			s += "0";
 		}
 		return s;
@@ -85,11 +92,11 @@ public class BlockSoundCable extends BlockContainer {
 	}
 	
 	public static int getColorFromMetadata(int meta) {
-		return Integer.parseInt(decToBin(meta).substring(9, 14), 2);
+		return Integer.parseInt(decToBin(meta).substring(9, 13), 2);
 	}
 	
 	public boolean isCableEqual(int data1, int data2) {
-		if(decToBin(data1).substring(0, 3).equalsIgnoreCase(decToBin(data2).substring(0, 3)) && decToBin(data1).substring(9, 14).equalsIgnoreCase(decToBin(data2).substring(9, 14))) {
+		if(decToBin(data1).substring(0, 3).equalsIgnoreCase(decToBin(data2).substring(0, 3)) && decToBin(data1).substring(9, 13).equalsIgnoreCase(decToBin(data2).substring(9, 13))) {
 			return true;
 		}
 		return false;

@@ -4,6 +4,7 @@ import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraftforge.common.Configuration;
 import cpw.mods.fml.common.Mod;
+import cpw.mods.fml.common.Mod.Init;
 import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.Mod.PostInit;
 import cpw.mods.fml.common.Mod.PreInit;
@@ -38,13 +39,21 @@ public class SoundCraft {
 		config.save();
 	}
 	
-	@PreInit
+	@Init
 	public void init(FMLInitializationEvent event) {
+		proxy.registerRenderInformation();
+		
+		//init blocks
 		soundCable = new BlockSoundCable(SoundCraftConfig.soundCableID).setStepSound(Block.soundClothFootstep).setHardness(0.8F).setCreativeTab(tabSoundCraft).setUnlocalizedName("soundCable");
 	
+		//register blocks
 		GameRegistry.registerBlock(soundCable, "SoundCraft_soundCable");
 		
+		//add block names
 		LanguageRegistry.addName(soundCable, "Sound Cable");
+		
+		//add localizations
+		LanguageRegistry.instance().addStringLocalization("itemGroup.SoundCraft", "SoundCraft");
 	}
 	
 	@PostInit
