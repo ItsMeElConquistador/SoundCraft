@@ -17,6 +17,7 @@ import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
 import elcon.mods.soundcraft.blocks.BlockSoundCable;
+import elcon.mods.soundcraft.blocks.TileEntitySoundCable;
 
 @Mod(modid = "SoundCraft", name = "SoundCraft", version = "1.0.0")
 @NetworkMod(clientSideRequired = true, serverSideRequired = false, packetHandler = SoundCraftPacketHandler.class, channels = {"SCCable"})
@@ -51,6 +52,9 @@ public class SoundCraft {
 	
 		//register blocks
 		GameRegistry.registerBlock(soundCable, "SoundCraft_soundCable");
+
+		//register tileentities
+		GameRegistry.registerTileEntity(TileEntitySoundCable.class, "SoundCable");
 		
 		//add block names
 		LanguageRegistry.addName(soundCable, "Sound Cable");

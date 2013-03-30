@@ -10,8 +10,8 @@ import net.minecraft.tileentity.TileEntity;
 
 public class TileEntitySoundCable extends TileEntity {
 
-	public int color;
-	public boolean[] directions;
+	public int color = 0;
+	public boolean[] directions = new boolean[6];
 	
 	@Override
 	public Packet getDescriptionPacket() {

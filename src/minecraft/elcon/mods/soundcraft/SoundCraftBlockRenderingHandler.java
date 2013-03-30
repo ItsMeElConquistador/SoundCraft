@@ -5,6 +5,7 @@ import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.world.IBlockAccess;
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 import elcon.mods.soundcraft.blocks.BlockSoundCable;
+import elcon.mods.soundcraft.blocks.TileEntitySoundCable;
 
 public class SoundCraftBlockRenderingHandler implements ISimpleBlockRenderingHandler {
 
@@ -16,16 +17,14 @@ public class SoundCraftBlockRenderingHandler implements ISimpleBlockRenderingHan
 	public boolean renderWorldBlock(IBlockAccess world, int x, int y, int z, Block block, int renderID, RenderBlocks renderer) {
 		if(renderID == SoundCraftConfig.soundCableRenderID) {
 			BlockSoundCable blockSoundCable = (BlockSoundCable) block;
-			
 			int meta = world.getBlockMetadata(x, y, z);
-			int type = BlockSoundCable.getTypeFromMetadata(meta);
-			boolean[] directions = BlockSoundCable.getDirectionsFromMetadata(meta);
-			int color = BlockSoundCable.getColorFromMetadata(meta);
+			TileEntitySoundCable te = (TileEntitySoundCable) world.getBlockTileEntity(x, y, z);
+			
 			
 			//System.out.println(Integer.toString(meta, 2) + ": " + type + " - " + color);
 			
 			renderer.renderAllFaces = true;
-			renderer.setOverrideBlockTexture(SoundCableType.soundCables[type].textures[color]);
+			renderer.setOverrideBlockTexture(SoundCableType.soundCables[meta].textures[te.color]);
 
 			renderer.setRenderBounds(pixels(6), pixels(6), pixels(6), pixels(10), pixels(10), pixels(10));
 			renderer.renderStandardBlock(blockSoundCable, x, y, z);
@@ -37,27 +36,27 @@ public class SoundCraftBlockRenderingHandler implements ISimpleBlockRenderingHan
 			System.out.println(directions[4]);
 			System.out.println(directions[5]);*/
 			
-			if(directions[0]) {
+			if(te.directions[0]) {
 				renderer.setRenderBounds(pixels(0), pixels(6), pixels(6), pixels(6), pixels(10), pixels(10));
 				renderer.renderStandardBlock(blockSoundCable, x, y, z);
 			}
-			if(directions[1]) {
+			if(te.directions[1]) {
 				renderer.setRenderBounds(pixels(10), pixels(6), pixels(6), pixels(16), pixels(10), pixels(10));
 				renderer.renderStandardBlock(blockSoundCable, x, y, z);
 			}
-			if(directions[2]) {
+			if(te.directions[2]) {
 				renderer.setRenderBounds(pixels(6), pixels(0), pixels(6), pixels(10), pixels(6), pixels(10));
 				renderer.renderStandardBlock(blockSoundCable, x, y, z);
 			}
-			if(directions[3]) {
+			if(te.directions[3]) {
 				renderer.setRenderBounds(pixels(6), pixels(10), pixels(6), pixels(10), pixels(16), pixels(10));
 				renderer.renderStandardBlock(blockSoundCable, x, y, z);
 			}
-			if(directions[4]) {
+			if(te.directions[4]) {
 				renderer.setRenderBounds(pixels(6), pixels(6), pixels(0), pixels(10), pixels(10), pixels(6));
 				renderer.renderStandardBlock(blockSoundCable, x, y, z);
 			}
-			if(directions[5]) {
+			if(te.directions[5]) {
 				renderer.setRenderBounds(pixels(6), pixels(6), pixels(10), pixels(10), pixels(10), pixels(16));
 				renderer.renderStandardBlock(blockSoundCable, x, y, z);
 			}

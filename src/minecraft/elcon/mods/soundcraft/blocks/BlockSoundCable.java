@@ -2,11 +2,12 @@ package elcon.mods.soundcraft.blocks;
 
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.IconRegister;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
 import net.minecraft.world.Explosion;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -32,8 +33,14 @@ public class BlockSoundCable extends BlockContainer {
 	
 	@Override
 	@SideOnly(Side.CLIENT)
+	public Icon getBlockTexture(IBlockAccess blockAccess, int x, int y, int z, int i) {
+		return SoundCableType.soundCables[blockAccess.getBlockMetadata(x, y, z)].textures[((TileEntitySoundCable) blockAccess.getBlockTileEntity(x, y, z)).color];
+	}
+	
+	@Override
+	@SideOnly(Side.CLIENT)
 	public Icon getBlockTextureFromSideAndMetadata(int i, int j) {
-		return SoundCableType.soundCables[getTypeFromMetadata(j)].textures[getColorFromMetadata(j)];
+		return SoundCableType.soundCables[j].textures[0];
 	}
 	
 	@Override
@@ -81,36 +88,52 @@ public class BlockSoundCable extends BlockContainer {
 	
 	public void updateCable(World world, int x, int y, int z) {
 		int data = world.getBlockMetadata(x, y, z);
-		TileEntitySoundCable te = world.getBlockTileEntity(x, y, z);
-		int color = world.getT
+		TileEntitySoundCable te = (TileEntitySoundCable) world.getBlockTileEntity(x, y, z);
+		int color = te.color;
+		TileEntitySoundCable t = null;
 		
-		
-		if(world.getBlockId(x - 1, y, z) == blockID && isCableEqual(data, world.getBlockMetadata(x - 1, y, z))) {
-			world.setBlockMetadataWithNotify(x, y, z, data | 8, 2);
-			data = world.getBlockMetadata(x, y, z);
-		} 
-		if(world.getBlockId(x + 1, y, z) == blockID && isCableEqual(data, world.getBlockMetadata(x + 1, y, z))) {
-			world.setBlockMetadataWithNotify(x, y, z, data | 16, 2);
-			data = world.getBlockMetadata(x, y, z);
+		if(world.getBlockId(x - 1, y, z) == blockID ) {
+			t = (TileEntitySoundCable) world.getBlockTileEntity(x - 1, y, z);
+			if(isCableEqual(data, color, world.getBlockMetadata(x - 1, y, z), t.color)) {
+				t.directions[0] = true;
+				world.setBlockTileEntity(x, y, z, t);
+			}
 		}
-		if(world.getBlockId(x, y - 1, z) == blockID && isCableEqual(data, world.getBlockMetadata(x, y - 1, z))) {
-			world.setBlockMetadataWithNotify(x, y, z, data | 32, 2);
-			data = world.getBlockMetadata(x, y, z);
+		if(world.getBlockId(x + 1, y, z) == blockID) {
+			t = (TileEntitySoundCable) world.getBlockTileEntity(x - 1, y, z);
+			if(isCableEqual(data, color, world.getBlockMetadata(x + 1, y, z), t.color)) {
+				t.directions[1] = true;
+				world.setBlockTileEntity(x, y, z, t);
+			}
 		}
-		if(world.getBlockId(x, y + 1, z) == blockID && isCableEqual(data, world.getBlockMetadata(x, y + 1, z))) {
-			world.setBlockMetadataWithNotify(x, y, z, data | 64, 2);
-			data = world.getBlockMetadata(x, y, z);
+		if(world.getBlockId(x, y - 1, z) == blockID) {
+			t = (TileEntitySoundCable) world.getBlockTileEntity(x - 1, y, z);
+			if(isCableEqual(data, color, world.getBlockMetadata(x, y - 1, z), t.color)) {
+				t.directions[2] = true;
+				world.setBlockTileEntity(x, y, z, t);
+			}
 		}
-		if(world.getBlockId(x, y, z - 1) == blockID && isCableEqual(data, world.getBlockMetadata(x, y, z - 1))) {
-			world.setBlockMetadataWithNotify(x, y, z, data | 128, 2);
-			data = world.getBlockMetadata(x, y, z);
-		} 
-		if(world.getBlockId(x, y, z + 1) == blockID && isCableEqual(data, world.getBlockMetadata(x, y, z + 1))) {
-			world.setBlockMetadataWithNotify(x, y, z, data | 256, 2);
-			data = world.getBlockMetadata(x, y, z);
+		if(world.getBlockId(x, y + 1, z) == blockID) {
+			t = (TileEntitySoundCable) world.getBlockTileEntity(x - 1, y, z);
+			if(isCableEqual(data, color, world.getBlockMetadata(x, y + 1, z), t.color)) {
+				t.directions[3] = true;
+				world.setBlockTileEntity(x, y, z, t);
+			}
 		}
-		
-		System.out.println(world.getBlockMetadata(x, y, z));
+		if(world.getBlockId(x, y, z - 1) == blockID) {
+			t = (TileEntitySoundCable) world.getBlockTileEntity(x - 1, y, z);
+			if(isCableEqual(data, color, world.getBlockMetadata(x, y, z - 1), t.color)) {
+				t.directions[4] = true;
+				world.setBlockTileEntity(x, y, z, t);
+			} 
+		}
+		if(world.getBlockId(x, y, z + 1) == blockID) {
+			t = (TileEntitySoundCable) world.getBlockTileEntity(x - 1, y, z);
+			if(isCableEqual(data, color, world.getBlockMetadata(x, y, z + 1), t.color)) {
+				t.directions[5] = true;
+				world.setBlockTileEntity(x, y, z, t);
+			}
+		}
 		
 		//notifyCableNeighbors(world, x, y, z);
 	}
