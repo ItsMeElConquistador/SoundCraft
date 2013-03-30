@@ -31,7 +31,7 @@ public class BlockSoundCable extends BlockContainer {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public Icon getBlockTextureFromSideAndMetadata(int i, int j) {
-		return SoundCableType.soundCables[getTypeFromMetadata(i)].textures[getColorFromMetadata(i)];
+		return SoundCableType.soundCables[getTypeFromMetadata(j)].textures[getColorFromMetadata(j)];
 	}
 	
 	@Override
@@ -71,7 +71,7 @@ public class BlockSoundCable extends BlockContainer {
 	}
 	
 	private static String decToBin(int data) {
-		String s = Integer.toString(data);
+		String s = Integer.toString(data, 2);
 		while(13 - s.length() > 0) {
 			s += "0";
 		}
@@ -106,23 +106,27 @@ public class BlockSoundCable extends BlockContainer {
 		int data = world.getBlockMetadata(x, y, z);
 		
 		if(world.getBlockId(x - 1, y, z) == blockID && isCableEqual(data, world.getBlockMetadata(x - 1, y, z))) {
-			world.setBlockMetadataWithNotify(x - 1, y, z, data | 8, 2);
+			world.setBlockMetadataWithNotify(x, y, z, data | 8, 2);
 		} 
 		if(world.getBlockId(x + 1, y, z) == blockID && isCableEqual(data, world.getBlockMetadata(x + 1, y, z))) {
-			world.setBlockMetadataWithNotify(x + 1, y, z, data | 16, 2);
+			world.setBlockMetadataWithNotify(x, y, z, data | 16, 2);
 		}
 		if(world.getBlockId(x, y - 1, z) == blockID && isCableEqual(data, world.getBlockMetadata(x, y - 1, z))) {
-			world.setBlockMetadataWithNotify(x, y - 1, z, data | 32, 2);
+			world.setBlockMetadataWithNotify(x, y, z, data | 32, 2);
 		}
 		if(world.getBlockId(x, y + 1, z) == blockID && isCableEqual(data, world.getBlockMetadata(x, y + 1, z))) {
-			world.setBlockMetadataWithNotify(x, y + 1, z, data | 64, 2);
+			world.setBlockMetadataWithNotify(x, y, z, data | 64, 2);
 		}
 		if(world.getBlockId(x, y, z - 1) == blockID && isCableEqual(data, world.getBlockMetadata(x, y, z - 1))) {
-			world.setBlockMetadataWithNotify(x, y, z - 1, data | 128, 2);
+			world.setBlockMetadataWithNotify(x, y, z, data | 128, 2);
 		} 
 		if(world.getBlockId(x, y, z + 1) == blockID && isCableEqual(data, world.getBlockMetadata(x, y, z + 1))) {
-			world.setBlockMetadataWithNotify(x, y, z + 1, data | 256, 2);
+			world.setBlockMetadataWithNotify(x, y, z, data | 256, 2);
 		}
+		
+		System.out.println(world.getBlockMetadata(x, y, z));
+		
+		notifyCableNeighbors(world, x, y, z);
 	}
 	
 	@Override

@@ -24,9 +24,16 @@ public class SoundCraftBlockRenderingHandler implements ISimpleBlockRenderingHan
 			
 			renderer.renderAllFaces = true;
 			renderer.setOverrideBlockTexture(SoundCableType.soundCables[type].textures[color]);
-			
+
 			renderer.setRenderBounds(pixels(6), pixels(6), pixels(6), pixels(10), pixels(10), pixels(10));
 			renderer.renderStandardBlock(blockSoundCable, x, y, z);
+			
+			System.out.println(directions[0]);
+			System.out.println(directions[1]);
+			System.out.println(directions[2]);
+			System.out.println(directions[3]);
+			System.out.println(directions[4]);
+			System.out.println(directions[5]);
 			
 			if(directions[0]) {
 				renderer.setRenderBounds(pixels(0), pixels(6), pixels(6), pixels(6), pixels(10), pixels(10));
@@ -73,6 +80,6 @@ public class SoundCraftBlockRenderingHandler implements ISimpleBlockRenderingHan
 	}
 
 	public float pixels(int i) {
-		return (float) ((1 / 16) * i);
+		return (float) (0.0625F * i);
 	}
 }
