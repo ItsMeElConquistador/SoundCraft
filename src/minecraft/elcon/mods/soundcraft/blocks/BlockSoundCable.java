@@ -89,51 +89,93 @@ public class BlockSoundCable extends BlockContainer {
 	public void updateCable(World world, int x, int y, int z) {
 		int data = world.getBlockMetadata(x, y, z);
 		TileEntitySoundCable te = (TileEntitySoundCable) world.getBlockTileEntity(x, y, z);
+		if(te == null) {
+			te = new TileEntitySoundCable();
+			world.setBlockTileEntity(x, y, z, te);
+		}
 		int color = te.color;
 		TileEntitySoundCable t = null;
 		
 		if(world.getBlockId(x - 1, y, z) == blockID ) {
 			t = (TileEntitySoundCable) world.getBlockTileEntity(x - 1, y, z);
+			if(t == null) {
+				t = new TileEntitySoundCable();
+				world.setBlockTileEntity(x - 1, y, z, t);
+			}			
 			if(isCableEqual(data, color, world.getBlockMetadata(x - 1, y, z), t.color)) {
-				t.directions[0] = true;
-				world.setBlockTileEntity(x, y, z, t);
+				te.directions[0] = true;
+				t.directions[1] = true;
+				world.setBlockTileEntity(x - 1, y, z, t);
+				world.markBlockForRenderUpdate(x - 1, y, z - 1);
 			}
 		}
 		if(world.getBlockId(x + 1, y, z) == blockID) {
-			t = (TileEntitySoundCable) world.getBlockTileEntity(x - 1, y, z);
+			t = (TileEntitySoundCable) world.getBlockTileEntity(x + 1, y, z);
+			if(t == null) {
+				t = new TileEntitySoundCable();
+				world.setBlockTileEntity(x + 1, y, z, t);
+			}		
 			if(isCableEqual(data, color, world.getBlockMetadata(x + 1, y, z), t.color)) {
-				t.directions[1] = true;
-				world.setBlockTileEntity(x, y, z, t);
+				te.directions[1] = true;
+				t.directions[0] = true;
+				world.setBlockTileEntity(x + 1, y, z, t);
+				world.markBlockForRenderUpdate(x + 1, y, z - 1);
 			}
 		}
 		if(world.getBlockId(x, y - 1, z) == blockID) {
-			t = (TileEntitySoundCable) world.getBlockTileEntity(x - 1, y, z);
+			t = (TileEntitySoundCable) world.getBlockTileEntity(x, y - 1, z);
+			if(t == null) {
+				t = new TileEntitySoundCable();
+				world.setBlockTileEntity(x, y - 1, z, t);
+			}		
 			if(isCableEqual(data, color, world.getBlockMetadata(x, y - 1, z), t.color)) {
-				t.directions[2] = true;
-				world.setBlockTileEntity(x, y, z, t);
+				te.directions[2] = true;
+				t.directions[3] = true;
+				world.setBlockTileEntity(x, y - 1, z, t);
+				world.markBlockForRenderUpdate(x, y - 1, z);
 			}
 		}
 		if(world.getBlockId(x, y + 1, z) == blockID) {
-			t = (TileEntitySoundCable) world.getBlockTileEntity(x - 1, y, z);
+			t = (TileEntitySoundCable) world.getBlockTileEntity(x, y + 1, z);
+			if(t == null) {
+				t = new TileEntitySoundCable();
+				world.setBlockTileEntity(x, y + 1, z, t);
+			}		
 			if(isCableEqual(data, color, world.getBlockMetadata(x, y + 1, z), t.color)) {
-				t.directions[3] = true;
-				world.setBlockTileEntity(x, y, z, t);
+				te.directions[3] = true;
+				t.directions[2] = true;
+				world.setBlockTileEntity(x, y + 1, z, t);
+				world.markBlockForRenderUpdate(x, y + 1, z);
 			}
 		}
 		if(world.getBlockId(x, y, z - 1) == blockID) {
-			t = (TileEntitySoundCable) world.getBlockTileEntity(x - 1, y, z);
+			t = (TileEntitySoundCable) world.getBlockTileEntity(x, y, z - 1);
+			if(t == null) {
+				t = new TileEntitySoundCable();
+				world.setBlockTileEntity(x, y, z - 1, t);
+			}		
 			if(isCableEqual(data, color, world.getBlockMetadata(x, y, z - 1), t.color)) {
-				t.directions[4] = true;
-				world.setBlockTileEntity(x, y, z, t);
+				te.directions[4] = true;
+				t.directions[5] = true;
+				world.setBlockTileEntity(x, y, z - 1, t);
+				world.markBlockForRenderUpdate(x, y, z - 1);
 			} 
 		}
 		if(world.getBlockId(x, y, z + 1) == blockID) {
-			t = (TileEntitySoundCable) world.getBlockTileEntity(x - 1, y, z);
+			t = (TileEntitySoundCable) world.getBlockTileEntity(x, y, z + 1);
+			if(t == null) {
+				t = new TileEntitySoundCable();
+				world.setBlockTileEntity(x, y, z + 1, t);
+			}		
 			if(isCableEqual(data, color, world.getBlockMetadata(x, y, z + 1), t.color)) {
-				t.directions[5] = true;
-				world.setBlockTileEntity(x, y, z, t);
+				te.directions[5] = true;
+				t.directions[4] = true;
+				world.setBlockTileEntity(x, y, z + 1, t);
+				world.markBlockForRenderUpdate(x, y, z + 1);
 			}
 		}
+		world.setBlockTileEntity(x, y, z, te);
+		world.markBlockForRenderUpdate(x, y, z);
 		
 		//notifyCableNeighbors(world, x, y, z);
 	}
