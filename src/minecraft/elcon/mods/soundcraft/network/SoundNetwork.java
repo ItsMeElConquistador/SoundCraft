@@ -5,11 +5,15 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
+
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import elcon.mods.soundcraft.Coordinates;
@@ -158,11 +162,26 @@ public class SoundNetwork {
 			FileInputStream fis = new FileInputStream(file.getAbsolutePath());
 			GZIPInputStream gzis = new GZIPInputStream(fis);
 			ObjectInputStream in = new ObjectInputStream(gzis);
-			List<String> loaded = (List<String>) in.readObject();
+			ArrayList<SoundObjectSave> saves = (ArrayList<SoundObjectSave>) in.readObject();
 			
-			for(String key : loaded) {
-				
+			HashMap<Integer, SoundNetworkGroup> tempGroups = new HashMap<Integer, SoundNetworkGroup>();
+			
+			for(SoundObjectSave save : saves) {
+				if(save != null) {
+					int id = save.groupID;
+					if(tempGroups.containsKey(id)) {
+						NBTTagCompound nbt = new NBTTagCompound();
+						if(save.tileEntity.equalsIgnoreCase("SoundCable")) {
+							
+						} else if(save.tileEntity.equalsIgnoreCase("Speaker")) {
+							
+						} else if(save.tileEntity.equalsIgnoreCase("AdvancedJukebox")) {
+							
+						}
+					}
+				}
 			}
+			
 			FMLCommonHandler.instance().getFMLLogger().log(Level.INFO, "[SoundCraft] Loaded the sound network");
 			
 			in.close();
@@ -178,7 +197,23 @@ public class SoundNetwork {
 			FileOutputStream fos = new FileOutputStream(file.getAbsolutePath());
 			GZIPOutputStream gzos = new GZIPOutputStream(fos);
 			ObjectOutputStream out = new ObjectOutputStream(gzos);
-			out.writeObject(groups);
+			
+			ArrayList<SoundObjectSave> saves = new ArrayList<SoundObjectSave>();
+			
+			for(SoundNetworkGroup group : groups.values()) {
+				if(group != null) {
+					for(ISoundAcceptor o: group.acceptors) {
+						TileEntitySoundObject obj = (TileEntitySoundObject) o;
+						saves.add(new SoundObjectSave(obj.xCoord, obj.yCoord, obj.zCoord, obj.group, obj.getClass().getName().replaceAll("Tile", ""), false));
+					}
+					for(ISoundSource o: group.sources) {
+						TileEntitySoundObject obj = (TileEntitySoundObject) o;
+						saves.add(new SoundObjectSave(obj.xCoord, obj.yCoord, obj.zCoord, obj.group, obj.getClass().getName().replaceAll("Tile", ""), true));
+					}
+				}
+			}
+			
+			out.writeObject(saves);
 			out.flush();
 			out.close();
 			gzos.close();
