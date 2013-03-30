@@ -22,6 +22,8 @@ public class SoundCraftBlockRenderingHandler implements ISimpleBlockRenderingHan
 			boolean[] directions = BlockSoundCable.getDirectionsFromMetadata(meta);
 			int color = BlockSoundCable.getColorFromMetadata(meta);
 			
+			System.out.println(Integer.toString(meta, 2) + ": " + type + " - " + color);
+			
 			renderer.renderAllFaces = true;
 			renderer.setOverrideBlockTexture(SoundCableType.soundCables[type].textures[color]);
 

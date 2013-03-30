@@ -74,19 +74,26 @@ public class BlockSoundCable extends BlockContainer {
 	
 	private static String decToBin(int data) {
 		String s = Integer.toString(data, 2);
-		while(13 - s.length() > 0) {
-			s += "0";
+		char[] c = new char[13];
+		int j = 13 - s.length();
+		for(int i = 0; i < 13; i++) {
+			if(i < j) {
+				c[i] = '0';
+			} else {
+				c[i] = s.charAt(13 - i);
+			}
 		}
-		return s;
+		System.out.println(String.valueOf(c));
+		return String.valueOf(c);
 	}
 	
 	public static int getTypeFromMetadata(int meta) {
-		return Integer.parseInt(decToBin(meta).substring(0, 3), 2);
+		return Integer.parseInt(decToBin(meta).substring(10, 13), 2);
 	}
 	
 	public static boolean[] getDirectionsFromMetadata(int meta) {
 		boolean[] directions = new boolean[6];
-		String direction = decToBin(meta).substring(3, 9);
+		String direction = decToBin(meta).substring(4, 10);
 		for(int i = 0; i<6; i++) {
 			directions[i] = charToBoolean(direction.charAt(i));
 		}
@@ -94,12 +101,12 @@ public class BlockSoundCable extends BlockContainer {
 	}
 	
 	public static int getColorFromMetadata(int meta) {
-		return Integer.parseInt(decToBin(meta).substring(9, 13), 2);
+		return Integer.parseInt(decToBin(meta).substring(0, 4), 2);
 	}
 	
 	public boolean isCableEqual(int data1, int data2) {
 		System.out.println(data1 + " - " + data2);
-		if(decToBin(data1).substring(0, 3).equalsIgnoreCase(decToBin(data2).substring(0, 3)) && decToBin(data1).substring(9, 13).equalsIgnoreCase(decToBin(data2).substring(9, 13))) {
+		if(decToBin(data1).substring(10, 13).equalsIgnoreCase(decToBin(data2).substring(10, 13)) && decToBin(data1).substring(0, 4).equalsIgnoreCase(decToBin(data2).substring(0, 4))) {
 			System.out.println("equal");
 			return true;
 		}
