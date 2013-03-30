@@ -1,15 +1,17 @@
 package elcon.mods.soundcraft.blocks;
 
+import net.minecraft.block.BlockContainer;
+import net.minecraft.block.material.Material;
+import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.Icon;
+import net.minecraft.world.Explosion;
+import net.minecraft.world.World;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import elcon.mods.soundcraft.SoundCableType;
 import elcon.mods.soundcraft.SoundCraftConfig;
-import net.minecraft.block.BlockContainer;
-import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IconRegister;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Icon;
-import net.minecraft.world.World;
 
 public class BlockSoundCable extends BlockContainer {
 
@@ -96,7 +98,9 @@ public class BlockSoundCable extends BlockContainer {
 	}
 	
 	public boolean isCableEqual(int data1, int data2) {
+		System.out.println(data1 + " - " + data2);
 		if(decToBin(data1).substring(0, 3).equalsIgnoreCase(decToBin(data2).substring(0, 3)) && decToBin(data1).substring(9, 13).equalsIgnoreCase(decToBin(data2).substring(9, 13))) {
+			System.out.println("equal");
 			return true;
 		}
 		return false;
@@ -106,27 +110,39 @@ public class BlockSoundCable extends BlockContainer {
 		int data = world.getBlockMetadata(x, y, z);
 		
 		if(world.getBlockId(x - 1, y, z) == blockID && isCableEqual(data, world.getBlockMetadata(x - 1, y, z))) {
+			System.out.println("case1");
+			System.out.println(data | 8);
 			world.setBlockMetadataWithNotify(x, y, z, data | 8, 2);
 		} 
 		if(world.getBlockId(x + 1, y, z) == blockID && isCableEqual(data, world.getBlockMetadata(x + 1, y, z))) {
+			System.out.println("case2");
+			System.out.println(data | 16);
 			world.setBlockMetadataWithNotify(x, y, z, data | 16, 2);
 		}
 		if(world.getBlockId(x, y - 1, z) == blockID && isCableEqual(data, world.getBlockMetadata(x, y - 1, z))) {
+			System.out.println("case3");
+			System.out.println(data | 32);
 			world.setBlockMetadataWithNotify(x, y, z, data | 32, 2);
 		}
 		if(world.getBlockId(x, y + 1, z) == blockID && isCableEqual(data, world.getBlockMetadata(x, y + 1, z))) {
+			System.out.println("case4");
+			System.out.println(data | 64);
 			world.setBlockMetadataWithNotify(x, y, z, data | 64, 2);
 		}
 		if(world.getBlockId(x, y, z - 1) == blockID && isCableEqual(data, world.getBlockMetadata(x, y, z - 1))) {
+			System.out.println("case5");
+			System.out.println(data | 128);
 			world.setBlockMetadataWithNotify(x, y, z, data | 128, 2);
 		} 
 		if(world.getBlockId(x, y, z + 1) == blockID && isCableEqual(data, world.getBlockMetadata(x, y, z + 1))) {
+			System.out.println("case6");
+			System.out.println(data | 256);
 			world.setBlockMetadataWithNotify(x, y, z, data | 256, 2);
 		}
 		
 		System.out.println(world.getBlockMetadata(x, y, z));
 		
-		notifyCableNeighbors(world, x, y, z);
+		//notifyCableNeighbors(world, x, y, z);
 	}
 	
 	@Override
@@ -137,9 +153,23 @@ public class BlockSoundCable extends BlockContainer {
 	}
 	
 	@Override
-	public void onNeighborBlockChange(World world, int x, int y, int z, int par5) {
+	public void onBlockDestroyedByExplosion(World world, int x, int y, int z, Explosion explosion) {
 		if(!world.isRemote) {
 			updateCable(world, x, y, z);
+		}
+	}
+
+	@Override
+	public void onBlockDestroyedByPlayer(World world, int x, int y, int z, int par5) {
+		if(!world.isRemote) {
+			updateCable(world, x, y, z);
+		}
+	}
+	
+	@Override
+	public void onNeighborBlockChange(World world, int x, int y, int z, int par5) {
+		if(!world.isRemote) {
+			//updateCable(world, x, y, z);
 		}
 	}
 }
