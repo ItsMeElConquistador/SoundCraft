@@ -4,7 +4,7 @@
 
 Sound Cables
 	ID: 	1650
-	DATA: 	000-000000-00000
+	DATA: 	<type>
 	RENDER: 300
 	Types:
 		- Copper
@@ -20,9 +20,12 @@ Sound Cables
 		- Up
 		- Down
 	Colors:
-		No color or one of the 16 Minecraft colors
+		One of the 16 Minecraft colors
 		
 Speakers
+	ID:		1651
+	DATA: none
+	RENDER: normal
 Radio
 Recording
 CDs/Discs

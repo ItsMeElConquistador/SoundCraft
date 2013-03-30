@@ -10,5 +10,4 @@ For more information about the ModJam: http://forum.feed-the-beast.com/threads/m
 
 Currently:
 
-Taking a break.
-Streaming will continue todat (March 30, 2013) at 15:00 GMT.
+Streaming
