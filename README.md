@@ -10,4 +10,4 @@ For more information about the ModJam: http://forum.feed-the-beast.com/threads/m
 
 Currently:
 
-Taking a break, will continue in 1 hour
+Streaming
