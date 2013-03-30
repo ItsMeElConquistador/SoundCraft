@@ -21,7 +21,7 @@ public class BlockSoundCable extends BlockContainer {
 
 	@Override
 	public TileEntity createNewTileEntity(World world) {
-		return null;
+		return new TileEntitySoundCable();
 	}
 	
 	@Override
@@ -72,42 +72,8 @@ public class BlockSoundCable extends BlockContainer {
 		return false;
 	}
 	
-	private static String decToBin(int data) {
-		String s = Integer.toString(data, 2);
-		char[] c = new char[13];
-		int j = 13 - s.length();
-		for(int i = 0; i < 13; i++) {
-			if(i < j) {
-				c[i] = '0';
-			} else {
-				c[i] = s.charAt(j - i);
-			}
-		}
-		return String.valueOf(c);
-	}
-	
-	public static int getTypeFromMetadata(int meta) {
-		return Integer.parseInt(decToBin(meta).substring(10, 13), 2);
-	}
-	
-	public static boolean[] getDirectionsFromMetadata(int meta) {
-		System.out.println(decToBin(meta));
-		boolean[] directions = new boolean[6];
-		String direction = decToBin(meta).substring(4, 10);
-		for(int i = 0; i<6; i++) {
-			directions[i] = charToBoolean(direction.charAt(i));
-		}
-		return directions;
-	}
-	
-	public static int getColorFromMetadata(int meta) {
-		return Integer.parseInt(decToBin(meta).substring(0, 4), 2);
-	}
-	
-	public boolean isCableEqual(int data1, int data2) {
-		System.out.println(data1 + " - " + data2);
-		if(decToBin(data1).substring(10, 13).equalsIgnoreCase(decToBin(data2).substring(10, 13)) && decToBin(data1).substring(0, 4).equalsIgnoreCase(decToBin(data2).substring(0, 4))) {
-			System.out.println("equal");
+	public boolean isCableEqual(int data1, int c1, int data2, int c2) {
+		if(data1 == data2 && c1 == c2) {
 			return true;
 		}
 		return false;
@@ -115,6 +81,9 @@ public class BlockSoundCable extends BlockContainer {
 	
 	public void updateCable(World world, int x, int y, int z) {
 		int data = world.getBlockMetadata(x, y, z);
+		TileEntitySoundCable te = world.getBlockTileEntity(x, y, z);
+		int color = world.getT
+		
 		
 		if(world.getBlockId(x - 1, y, z) == blockID && isCableEqual(data, world.getBlockMetadata(x - 1, y, z))) {
 			world.setBlockMetadataWithNotify(x, y, z, data | 8, 2);

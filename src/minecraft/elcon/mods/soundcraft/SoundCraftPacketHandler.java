@@ -1,5 +1,7 @@
 package elcon.mods.soundcraft;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet250CustomPayload;
 
@@ -8,6 +10,7 @@ import com.google.common.io.ByteStreams;
 
 import cpw.mods.fml.common.network.IPacketHandler;
 import cpw.mods.fml.common.network.Player;
+import elcon.mods.soundcraft.blocks.TileEntitySoundCable;
 
 public class SoundCraftPacketHandler implements IPacketHandler {
 	
@@ -24,6 +27,16 @@ public class SoundCraftPacketHandler implements IPacketHandler {
 	}
 	
 	public void handleTileEntitySoundCable(ByteArrayDataInput dat) {
+		int x = dat.readInt();
+		int y = dat.readInt();
+		int z = dat.readInt();
 		
+		TileEntitySoundCable te = new TileEntitySoundCable();
+		te.color = dat.readInt();
+		for(int i = 0; i < 6; i++) {
+			te.directions[i] = dat.readBoolean();
+		}
+		
+		Minecraft.getMinecraft().theWorld.setBlockTileEntity(x, y, z, te);
 	}
 }

@@ -3,6 +3,7 @@ package elcon.mods.soundcraft;
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraftforge.common.Configuration;
+import net.minecraftforge.common.MinecraftForge;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.Init;
 import cpw.mods.fml.common.Mod.Instance;
@@ -18,7 +19,7 @@ import cpw.mods.fml.common.registry.LanguageRegistry;
 import elcon.mods.soundcraft.blocks.BlockSoundCable;
 
 @Mod(modid = "SoundCraft", name = "SoundCraft", version = "1.0.0")
-@NetworkMod(clientSideRequired = true, serverSideRequired = false)
+@NetworkMod(clientSideRequired = true, serverSideRequired = false, packetHandler = SoundCraftPacketHandler.class, channels = {"SCCable"})
 public class SoundCraft {
 
 	@Instance("SoundCraft")
@@ -26,6 +27,8 @@ public class SoundCraft {
 	
 	@SidedProxy(clientSide = "elcon.mods.soundcraft.ClientProxy", serverSide = "elcon.mods.soundcraft.CommonProxy")
 	public static CommonProxy proxy;
+	
+	public static SoundCraftEventHandler eventHandler;
 	
 	public static CreativeTabs tabSoundCraft = new CreativeTabSoundCraft("SoundCraft");
 	
@@ -54,6 +57,9 @@ public class SoundCraft {
 		
 		//add localizations
 		LanguageRegistry.instance().addStringLocalization("itemGroup.SoundCraft", "SoundCraft");
+		
+		eventHandler = new SoundCraftEventHandler();
+		MinecraftForge.EVENT_BUS.register(eventHandler);
 	}
 	
 	@PostInit
