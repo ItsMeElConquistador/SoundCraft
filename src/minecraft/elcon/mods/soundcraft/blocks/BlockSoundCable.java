@@ -109,35 +109,31 @@ public class BlockSoundCable extends BlockContainer {
 	public void updateCable(World world, int x, int y, int z) {
 		int data = world.getBlockMetadata(x, y, z);
 		
+		System.out.println("updating cable at: " + x + "," + y + "," + z);
+		
 		if(world.getBlockId(x - 1, y, z) == blockID && isCableEqual(data, world.getBlockMetadata(x - 1, y, z))) {
-			System.out.println("case1");
-			System.out.println(data | 8);
 			world.setBlockMetadataWithNotify(x, y, z, data | 8, 2);
+			data = world.getBlockMetadata(x, y, z);
 		} 
 		if(world.getBlockId(x + 1, y, z) == blockID && isCableEqual(data, world.getBlockMetadata(x + 1, y, z))) {
-			System.out.println("case2");
-			System.out.println(data | 16);
 			world.setBlockMetadataWithNotify(x, y, z, data | 16, 2);
+			data = world.getBlockMetadata(x, y, z);
 		}
 		if(world.getBlockId(x, y - 1, z) == blockID && isCableEqual(data, world.getBlockMetadata(x, y - 1, z))) {
-			System.out.println("case3");
-			System.out.println(data | 32);
 			world.setBlockMetadataWithNotify(x, y, z, data | 32, 2);
+			data = world.getBlockMetadata(x, y, z);
 		}
 		if(world.getBlockId(x, y + 1, z) == blockID && isCableEqual(data, world.getBlockMetadata(x, y + 1, z))) {
-			System.out.println("case4");
-			System.out.println(data | 64);
 			world.setBlockMetadataWithNotify(x, y, z, data | 64, 2);
+			data = world.getBlockMetadata(x, y, z);
 		}
 		if(world.getBlockId(x, y, z - 1) == blockID && isCableEqual(data, world.getBlockMetadata(x, y, z - 1))) {
-			System.out.println("case5");
-			System.out.println(data | 128);
 			world.setBlockMetadataWithNotify(x, y, z, data | 128, 2);
+			data = world.getBlockMetadata(x, y, z);
 		} 
 		if(world.getBlockId(x, y, z + 1) == blockID && isCableEqual(data, world.getBlockMetadata(x, y, z + 1))) {
-			System.out.println("case6");
-			System.out.println(data | 256);
 			world.setBlockMetadataWithNotify(x, y, z, data | 256, 2);
+			data = world.getBlockMetadata(x, y, z);
 		}
 		
 		System.out.println(world.getBlockMetadata(x, y, z));
