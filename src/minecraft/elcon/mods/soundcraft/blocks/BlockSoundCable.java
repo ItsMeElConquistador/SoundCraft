@@ -106,7 +106,9 @@ public class BlockSoundCable extends BlockContainer {
 				te.directions[0] = true;
 				t.directions[1] = true;
 				world.setBlockTileEntity(x - 1, y, z, t);
-				world.markBlockForRenderUpdate(x - 1, y, z - 1);
+				world.setBlockTileEntity(x, y, z, te);
+				world.markBlockForRenderUpdate(x, y, z);
+				world.markBlockForRenderUpdate(x - 1, y, z);
 			}
 		}
 		if(world.getBlockId(x + 1, y, z) == blockID) {
@@ -119,7 +121,9 @@ public class BlockSoundCable extends BlockContainer {
 				te.directions[1] = true;
 				t.directions[0] = true;
 				world.setBlockTileEntity(x + 1, y, z, t);
-				world.markBlockForRenderUpdate(x + 1, y, z - 1);
+				world.setBlockTileEntity(x, y, z, te);
+				world.markBlockForRenderUpdate(x, y, z);
+				world.markBlockForRenderUpdate(x + 1, y, z);
 			}
 		}
 		if(world.getBlockId(x, y - 1, z) == blockID) {
@@ -132,6 +136,8 @@ public class BlockSoundCable extends BlockContainer {
 				te.directions[2] = true;
 				t.directions[3] = true;
 				world.setBlockTileEntity(x, y - 1, z, t);
+				world.setBlockTileEntity(x, y, z, te);
+				world.markBlockForRenderUpdate(x, y, z);
 				world.markBlockForRenderUpdate(x, y - 1, z);
 			}
 		}
@@ -145,6 +151,8 @@ public class BlockSoundCable extends BlockContainer {
 				te.directions[3] = true;
 				t.directions[2] = true;
 				world.setBlockTileEntity(x, y + 1, z, t);
+				world.setBlockTileEntity(x, y, z, te);
+				world.markBlockForRenderUpdate(x, y, z);
 				world.markBlockForRenderUpdate(x, y + 1, z);
 			}
 		}
@@ -158,6 +166,8 @@ public class BlockSoundCable extends BlockContainer {
 				te.directions[4] = true;
 				t.directions[5] = true;
 				world.setBlockTileEntity(x, y, z - 1, t);
+				world.setBlockTileEntity(x, y, z, te);
+				world.markBlockForRenderUpdate(x, y, z);
 				world.markBlockForRenderUpdate(x, y, z - 1);
 			} 
 		}
@@ -171,6 +181,8 @@ public class BlockSoundCable extends BlockContainer {
 				te.directions[5] = true;
 				t.directions[4] = true;
 				world.setBlockTileEntity(x, y, z + 1, t);
+				world.setBlockTileEntity(x, y, z, te);
+				world.markBlockForRenderUpdate(x, y, z);
 				world.markBlockForRenderUpdate(x, y, z + 1);
 			}
 		}
@@ -204,7 +216,7 @@ public class BlockSoundCable extends BlockContainer {
 	@Override
 	public void onNeighborBlockChange(World world, int x, int y, int z, int par5) {
 		if(!world.isRemote) {
-			//updateCable(world, x, y, z);
+			updateCable(world, x, y, z);
 		}
 	}
 }
