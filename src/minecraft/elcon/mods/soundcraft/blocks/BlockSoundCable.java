@@ -1,5 +1,6 @@
 package elcon.mods.soundcraft.blocks;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
@@ -84,6 +85,36 @@ public class BlockSoundCable extends BlockContainer {
 			return true;
 		}
 		return false;
+	}
+	
+	public void connectCable(World world, int x1, int y1, int z1, int x2, int y2, int z2, int direction1, int direction2) {
+		int id1 = world.getBlockId(x1, y1, z1);
+		int id2 = world.getBlockId(x2, y2, z2);
+		if(id1 == blockID) {
+			TileEntitySoundCable te = (TileEntitySoundCable) world.getBlockTileEntity(x1, y1, z1);
+			te.directions[direction1] = true;
+			world.setBlockTileEntity(x1, y1, z1, te);
+		}
+		if(id2 == blockID) {
+			TileEntitySoundCable te = (TileEntitySoundCable) world.getBlockTileEntity(x2, y2, z2);
+			te.directions[direction2] = true;
+			world.setBlockTileEntity(x2, y2, z2, te);
+		}
+	}
+	
+	public void unconnectCable(World world, int x1, int y1, int z1, int x2, int y2, int z2, int direction1, int direction2) {
+		int id1 = world.getBlockId(x1, y1, z1);
+		int id2 = world.getBlockId(x2, y2, z2);
+		if(id1 == blockID) {
+			TileEntitySoundCable te = (TileEntitySoundCable) world.getBlockTileEntity(x1, y1, z1);
+			te.directions[direction1] = false;
+			world.setBlockTileEntity(x1, y1, z1, te);
+		}
+		if(id2 == blockID) {
+			TileEntitySoundCable te = (TileEntitySoundCable) world.getBlockTileEntity(x2, y2, z2);
+			te.directions[direction2] = false;
+			world.setBlockTileEntity(x2, y2, z2, te);
+		}
 	}
 	
 	public void updateCable(World world, int x, int y, int z) {
