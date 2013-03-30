@@ -1,8 +1,9 @@
 package elcon.mods.soundcraft.network;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class SoundNetworkGroup {
+public class SoundNetworkGroup implements Serializable {
 
 	public int id;
 	

@@ -9,9 +9,26 @@ import net.minecraftforge.client.event.sound.PlayStreamingEvent;
 import net.minecraftforge.client.event.sound.PlayStreamingSourceEvent;
 import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.event.entity.PlaySoundAtEntityEvent;
+import net.minecraftforge.event.world.WorldEvent;
 
 public class SoundCraftEventHandler {
 
+	@ForgeSubscribe
+	public void worldLoad(WorldEvent.Load event) {
+		if(!event.world.isRemote) {
+			SoundCraftSaveHandler sh = new SoundCraftSaveHandler(event.world.getSaveHandler(), event.world);
+			sh.load();
+		}
+	}
+	
+	@ForgeSubscribe
+	public void worldSave(WorldEvent.Save event) {
+		if(!event.world.isRemote) {
+			SoundCraftSaveHandler sh = new SoundCraftSaveHandler(event.world.getSaveHandler(), event.world);
+			sh.save();
+		}
+	}
+	
 	@ForgeSubscribe
 	public void onPlayBackgroundMusic(PlayBackgroundMusicEvent event) {
 		

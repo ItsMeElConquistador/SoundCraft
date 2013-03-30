@@ -4,7 +4,7 @@ import net.minecraft.tileentity.TileEntity;
 import elcon.mods.soundcraft.network.ISoundAcceptor;
 import elcon.mods.soundcraft.network.Sound;
 
-public class TileEntitySpeaker extends TileEntity implements ISoundAcceptor {
+public class TileEntitySpeaker extends TileEntitySoundObject implements ISoundAcceptor {
 
 	@Override
 	public boolean canAcceptSound(Sound sound) {

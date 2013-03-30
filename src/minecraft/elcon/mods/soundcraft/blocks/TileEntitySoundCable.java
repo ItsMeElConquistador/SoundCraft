@@ -10,7 +10,7 @@ import net.minecraft.tileentity.TileEntity;
 import elcon.mods.soundcraft.network.ISoundConductor;
 import elcon.mods.soundcraft.network.Sound;
 
-public class TileEntitySoundCable extends TileEntity implements ISoundConductor {
+public class TileEntitySoundCable extends TileEntitySoundObject implements ISoundConductor {
 
 	public int color = 0;
 	public boolean[] directions = new boolean[6];

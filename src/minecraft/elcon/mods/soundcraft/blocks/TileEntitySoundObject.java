@@ -7,17 +7,17 @@ import elcon.mods.soundcraft.network.SoundNetworkGroup;
 
 public class TileEntitySoundObject extends TileEntity {
 
-	public SoundNetworkGroup group;
+	public int group;
 	
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
-		group = SoundNetwork.getGroup(nbt.getInteger("SoundGroupID"));
+		group = nbt.getInteger("SoundGroupID");
 	}
 	
 	@Override
 	public void writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
-		nbt.setInteger("SoundGroupID", group.id);
+		nbt.setInteger("SoundGroupID", group);
 	}
 }
