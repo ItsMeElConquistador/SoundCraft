@@ -2,10 +2,8 @@ package elcon.mods.soundcraft.tileentities;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
-import elcon.mods.soundcraft.network.ISoundSource;
 
-public class TileEntityAdvancedJukebox extends TileEntitySoundObject implements ISoundSource {
+public class TileEntityAdvancedJukebox extends TileEntitySoundSource {
 
 	public ItemStack record;
 

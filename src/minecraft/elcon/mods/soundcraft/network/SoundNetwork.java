@@ -7,27 +7,24 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
-
 import cpw.mods.fml.common.FMLCommonHandler;
-import elcon.mods.soundcraft.Coordinates;
+import elcon.mods.soundcraft.tileentities.TileEntitySoundAcceptor;
 import elcon.mods.soundcraft.tileentities.TileEntitySoundObject;
+import elcon.mods.soundcraft.tileentities.TileEntitySoundSource;
 
 public class SoundNetwork {
 
-	public static HashMap<Coordinates, SoundNetworkGroup> groups = new HashMap<Coordinates, SoundNetworkGroup>();
+	public static ArrayList<SoundNetworkGroup> groups = new ArrayList<SoundNetworkGroup>();
 	
 	public static int findGroupID() {
 		int id = 0;
 		int oldID = 0;
 		int highest = 0;
-		for(SoundNetworkGroup group : groups.values()) {
+		for(SoundNetworkGroup group : groups) {
 			if(group != null) {
 				id = group.id;
 				if(id != 0 && id != (oldID + 1)) {
@@ -42,20 +39,12 @@ public class SoundNetwork {
 		return highest + 1;
 	}
 	
-	public static void addGroup(int x, int y, int z, SoundNetworkGroup group) {
-		groups.put(new Coordinates(x, y, z), group);
-	}
-	
-	public static SoundNetworkGroup getGroup(int x, int y, int z) {
-		Coordinates c = new Coordinates(x, y, z);
-		if(groups.containsKey(c)) {
-			return groups.get(c);
-		}
-		return null;
+	public static void addGroup(SoundNetworkGroup group) {
+		groups.add(group);
 	}
 	
 	public static SoundNetworkGroup getGroup(int id) {
-		for(SoundNetworkGroup group : groups.values()) {
+		for(SoundNetworkGroup group : groups) {
 			if(group != null) {
 				if(id == group.id) {
 					return group;
@@ -65,18 +54,32 @@ public class SoundNetwork {
 		return null;
 	}
 	
-	public static void removeGroup(int x, int y, int z) {
-		Coordinates c = new Coordinates(x, y, z);
-		if(groups.containsKey(c)) {
-			groups.remove(c);
+	public static void removeGroup(int id) {
+		for(SoundNetworkGroup group : groups) {
+			if(group != null) {
+				if(id == group.id) {
+					groups.remove(group);
+				}
+			}
 		}
 	}
 	
+	public static boolean groupExists(int id) {
+		for(SoundNetworkGroup group : groups) {
+			if(group != null) {
+				if(id == group.id) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
 	public static SoundNetworkGroup mergeGroups(SoundNetworkGroup group1, SoundNetworkGroup group2) {
-		for(ISoundSource source : group2.sources) {
+		for(TileEntitySoundSource source : group2.sources) {
 			group1.sources.add(source);
 		}
-		for(ISoundAcceptor acceptor : group2.acceptors) {
+		for(TileEntitySoundAcceptor acceptor : group2.acceptors) {
 			group1.acceptors.add(acceptor);
 		}
 		group2.sources = null;
@@ -84,12 +87,8 @@ public class SoundNetwork {
 		return group1;
 	}
 	
-	public static boolean hasGroup(int x, int y, int z) {
-		return getGroup(x, y, z) != null;
-	}
-	
 	public static void connectGroups(TileEntitySoundObject obj1, int x1, int y1, int z1, TileEntitySoundObject obj2, int x2, int y2, int z2) {
-		System.out.println("connecting " + obj1 + " to " + obj2);
+		/*System.out.println("connecting " + obj1 + " to " + obj2);
 		if(obj1 == null || obj2 == null) {
 			return;
 		}
@@ -137,7 +136,7 @@ public class SoundNetwork {
 				group.sources.add((ISoundSource) obj1);
 			}
 			obj1.group = group.id;
-		}
+		}*/
 	}
 	
 	public static void unconnectGroups() {
@@ -145,16 +144,7 @@ public class SoundNetwork {
 	}
 	
 	public static void unconnectFromGroup(TileEntitySoundObject obj, int x, int y, int z) {
-		boolean hasGroup = hasGroup(x, y, z);
-		if(hasGroup) {
-			SoundNetworkGroup group = getGroup(x, y, z);
-			if(obj instanceof ISoundAcceptor) {
-				group.acceptors.remove(obj);
-			} else if(obj instanceof ISoundSource) {
-				group.sources.remove(obj);
-			}
-			obj.group = 0;
-		}
+		
 	}
 	
 	public static void load(File file) {
@@ -188,7 +178,7 @@ public class SoundNetwork {
 			
 			ArrayList<SoundNetworkNode> saves = new ArrayList<SoundNetworkNode>();
 			
-			for(SoundNetworkGroup group : groups.values()) {
+			for(SoundNetworkGroup group : groups) {
 				if(group != null) {
 					
 				}

@@ -29,12 +29,12 @@ public class BlockAdvancedJukebox extends BlockContainer {
 
 	public boolean onBlockActivated(World world, int par2, int par3, int par4, EntityPlayer entityPlayer, int par6, float par7, float par8, float par9) {
 		if(world.getBlockMetadata(par2, par3, par4) == 0) {
-			if(entityPlayer.getItemInUse().getItem() instanceof ItemRecord) {
-				insertRecord(world, par2, par3, par4, entityPlayer.getItemInUse());
+			if(entityPlayer.getHeldItem().getItem() instanceof ItemRecord) {
+				insertRecord(world, par2, par3, par4, entityPlayer.getHeldItem());
 				
-				String recordName = ((ItemRecord) entityPlayer.getItemInUse().getItem()).recordName;
+				String recordName = ((ItemRecord) entityPlayer.getHeldItem().getItem()).recordName;
 				
-				world.playRecord(recordName, par2, par3, par4);
+				world.playAuxSFX(1005, par2, par3, par4, entityPlayer.getHeldItem().itemID);
 				
 				TileEntityAdvancedJukebox te = (TileEntityAdvancedJukebox) world.getBlockTileEntity(par2, par3, par4);
 				if(te == null) {
@@ -42,8 +42,8 @@ public class BlockAdvancedJukebox extends BlockContainer {
 					world.setBlockTileEntity(par2, par3, par4, te);
 				}				
 	
-				SoundNetworkGroup group = SoundNetwork.getGroup(te.group);
-				group.sendSound(te, new Sound(recordName));
+				//SoundNetworkGroup group = SoundNetwork.getGroup(te.group);
+				//group.sendSound(te, new Sound(recordName));
 			}			
 			return false;
 		} else {
