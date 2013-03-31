@@ -38,6 +38,7 @@ public class BlockSoundCable extends BlockContainer {
 				world.setBlockTileEntity(x, y, z, te);
 			}
 			te.color = player.getHeldItem().getItemDamage();
+			player.getHeldItem().stackSize--;
 			world.markBlockForUpdate(x, y, z);
 		}
 		return false;

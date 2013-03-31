@@ -1,5 +1,8 @@
+Going to stream maybe later today (March 31, 2013).
 
-Streaming
+Going to fix the sound network, after I derped my code.
+
+#modjam
 
 
 
