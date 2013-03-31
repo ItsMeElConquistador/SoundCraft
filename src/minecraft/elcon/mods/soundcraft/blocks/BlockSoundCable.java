@@ -116,6 +116,7 @@ public class BlockSoundCable extends BlockContainer {
 	public void getSubBlocks(int i, CreativeTabs creativeTabs, List list) {
 		for(SoundCableType type : SoundCableType.soundCables) {
 			if(type != null) {
+				System.out.println("added: " + type.id);
 				list.add(new ItemStack(blockID, 1, type.id));
 			}
 		}
@@ -212,8 +213,16 @@ public class BlockSoundCable extends BlockContainer {
 			
 			world.markBlockForUpdate(x2, y2, z2);
 		}
-		TileEntitySoundConductor obj1 = (TileEntitySoundConductor) world.getBlockTileEntity(x1, y1, z1);
-		TileEntitySoundConductor obj2 = (TileEntitySoundConductor) world.getBlockTileEntity(x2, y2, z2);
+		TileEntity t1 = world.getBlockTileEntity(x1, y1, z1);
+		TileEntity t2 = world.getBlockTileEntity(x2, y2, z2);
+		TileEntitySoundConductor obj1 = null;
+		TileEntitySoundConductor obj2 = null;
+		if(t1 instanceof TileEntitySoundConductor) {
+			obj1 = (TileEntitySoundConductor) t1;
+		}
+		if(t2 instanceof TileEntitySoundConductor) {
+			obj2 = (TileEntitySoundConductor) t2;
+		}
 		if(obj1 != null) {
 			obj1.neighbors[direction1] = obj2;
 		}
@@ -247,8 +256,16 @@ public class BlockSoundCable extends BlockContainer {
 			
 			world.markBlockForUpdate(x2, y2, z2);
 		}
-		TileEntitySoundConductor obj1 = (TileEntitySoundConductor) world.getBlockTileEntity(x1, y1, z1);
-		TileEntitySoundConductor obj2 = (TileEntitySoundConductor) world.getBlockTileEntity(x2, y2, z2);
+		TileEntity t1 = world.getBlockTileEntity(x1, y1, z1);
+		TileEntity t2 = world.getBlockTileEntity(x2, y2, z2);
+		TileEntitySoundConductor obj1 = null;
+		TileEntitySoundConductor obj2 = null;
+		if(t1 instanceof TileEntitySoundConductor) {
+			obj1 = (TileEntitySoundConductor) t1;
+		}
+		if(t2 instanceof TileEntitySoundConductor) {
+			obj2 = (TileEntitySoundConductor) t2;
+		}
 		if(obj1 != null) {
 			obj1.neighbors[direction1] = null;
 		}

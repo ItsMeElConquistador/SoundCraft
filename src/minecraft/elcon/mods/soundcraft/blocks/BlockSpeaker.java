@@ -1,5 +1,6 @@
 package elcon.mods.soundcraft.blocks;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.BlockDirectional;
 import net.minecraft.block.material.Material;
@@ -9,9 +10,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
 import net.minecraft.util.MathHelper;
+import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import elcon.mods.soundcraft.SoundCraftConfig;
 import elcon.mods.soundcraft.tileentities.TileEntitySpeaker;
 
 public class BlockSpeaker extends BlockContainer {
@@ -58,5 +61,77 @@ public class BlockSpeaker extends BlockContainer {
 	@Override
 	public TileEntity createNewTileEntity(World world) {
 		return new TileEntitySpeaker();
+	}
+	
+	@Override
+	public void onBlockAdded(World world, int x, int y, int z) {
+		if(!world.isRemote) {
+			if(world.getBlockId(x - 1, y, z) == SoundCraftConfig.soundCableID) {
+				((BlockSoundCable) Block.blocksList[SoundCraftConfig.soundCableID]).updateCableConnections(world, x - 1, y, z);
+			}
+			if(world.getBlockId(x + 1, y, z) == SoundCraftConfig.soundCableID) {
+				((BlockSoundCable) Block.blocksList[SoundCraftConfig.soundCableID]).updateCableConnections(world, x + 1, y, z);
+			}
+			if(world.getBlockId(x, y - 1, z) == SoundCraftConfig.soundCableID) {
+				((BlockSoundCable) Block.blocksList[SoundCraftConfig.soundCableID]).updateCableConnections(world, x, y - 1, z);
+			}
+			if(world.getBlockId(x, y + 1, z) == SoundCraftConfig.soundCableID) {
+				((BlockSoundCable) Block.blocksList[SoundCraftConfig.soundCableID]).updateCableConnections(world, x, y + 1, z);
+			}
+			if(world.getBlockId(x, y, z - 1) == SoundCraftConfig.soundCableID) {
+				((BlockSoundCable) Block.blocksList[SoundCraftConfig.soundCableID]).updateCableConnections(world, x, y, z - 1);
+			}
+			if(world.getBlockId(x, y, z + 1) == SoundCraftConfig.soundCableID) {
+				((BlockSoundCable) Block.blocksList[SoundCraftConfig.soundCableID]).updateCableConnections(world, x, y, z + 1);
+			}
+		}
+	}
+	
+	@Override
+	public void onBlockDestroyedByExplosion(World world, int x, int y, int z, Explosion explosion) {
+		if(!world.isRemote) {
+			if(world.getBlockId(x - 1, y, z) == SoundCraftConfig.soundCableID) {
+				((BlockSoundCable) Block.blocksList[SoundCraftConfig.soundCableID]).updateCableConnections(world, x - 1, y, z);
+			}
+			if(world.getBlockId(x + 1, y, z) == SoundCraftConfig.soundCableID) {
+				((BlockSoundCable) Block.blocksList[SoundCraftConfig.soundCableID]).updateCableConnections(world, x + 1, y, z);
+			}
+			if(world.getBlockId(x, y - 1, z) == SoundCraftConfig.soundCableID) {
+				((BlockSoundCable) Block.blocksList[SoundCraftConfig.soundCableID]).updateCableConnections(world, x, y - 1, z);
+			}
+			if(world.getBlockId(x, y + 1, z) == SoundCraftConfig.soundCableID) {
+				((BlockSoundCable) Block.blocksList[SoundCraftConfig.soundCableID]).updateCableConnections(world, x, y + 1, z);
+			}
+			if(world.getBlockId(x, y, z - 1) == SoundCraftConfig.soundCableID) {
+				((BlockSoundCable) Block.blocksList[SoundCraftConfig.soundCableID]).updateCableConnections(world, x, y, z - 1);
+			}
+			if(world.getBlockId(x, y, z + 1) == SoundCraftConfig.soundCableID) {
+				((BlockSoundCable) Block.blocksList[SoundCraftConfig.soundCableID]).updateCableConnections(world, x, y, z + 1);
+			}
+		}
+	}
+	
+	@Override
+	public void onBlockDestroyedByPlayer(World world, int x, int y, int z, int par5) {
+		if(!world.isRemote) {
+			if(world.getBlockId(x - 1, y, z) == SoundCraftConfig.soundCableID) {
+				((BlockSoundCable) Block.blocksList[SoundCraftConfig.soundCableID]).updateCableConnections(world, x - 1, y, z);
+			}
+			if(world.getBlockId(x + 1, y, z) == SoundCraftConfig.soundCableID) {
+				((BlockSoundCable) Block.blocksList[SoundCraftConfig.soundCableID]).updateCableConnections(world, x + 1, y, z);
+			}
+			if(world.getBlockId(x, y - 1, z) == SoundCraftConfig.soundCableID) {
+				((BlockSoundCable) Block.blocksList[SoundCraftConfig.soundCableID]).updateCableConnections(world, x, y - 1, z);
+			}
+			if(world.getBlockId(x, y + 1, z) == SoundCraftConfig.soundCableID) {
+				((BlockSoundCable) Block.blocksList[SoundCraftConfig.soundCableID]).updateCableConnections(world, x, y + 1, z);
+			}
+			if(world.getBlockId(x, y, z - 1) == SoundCraftConfig.soundCableID) {
+				((BlockSoundCable) Block.blocksList[SoundCraftConfig.soundCableID]).updateCableConnections(world, x, y, z - 1);
+			}
+			if(world.getBlockId(x, y, z + 1) == SoundCraftConfig.soundCableID) {
+				((BlockSoundCable) Block.blocksList[SoundCraftConfig.soundCableID]).updateCableConnections(world, x, y, z + 1);
+			}
+		}
 	}
 }
