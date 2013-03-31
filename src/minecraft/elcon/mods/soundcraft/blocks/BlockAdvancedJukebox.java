@@ -42,8 +42,10 @@ public class BlockAdvancedJukebox extends BlockContainer {
 					world.setBlockTileEntity(par2, par3, par4, te);
 				}				
 	
-				//SoundNetworkGroup group = SoundNetwork.getGroup(te.group);
-				//group.sendSound(te, new Sound(recordName));
+				SoundNetworkGroup group = SoundNetwork.getGroup(te.group);
+				if(group != null) {
+					group.sendSound(te, new Sound(recordName));
+				}
 			}			
 			return false;
 		} else {

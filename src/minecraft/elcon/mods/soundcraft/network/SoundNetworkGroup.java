@@ -36,7 +36,7 @@ public class SoundNetworkGroup implements Serializable {
 			}
 		}
 	}
-	
+
 	public void sendSound(TileEntitySoundSource source, Sound sound) {
 		if(sources.contains(source)) {
 			for(TileEntitySoundAcceptor acceptor : acceptors) {
@@ -47,27 +47,46 @@ public class SoundNetworkGroup implements Serializable {
 		}
 	}
 	
-	public int[] searchComponent(int[] comps, int i, int count) {
+	public int getNodeID() {
+		int highest = 0;
+		for(int i = 0; i < nodes.size(); i++) {
+			if(getNode(i) == null) {
+				return i;
+			} else if(i > highest) {
+				highest = i;
+			}
+		}
+		return 0;
+	}
+	
+	public int[] searchComponent(int[] comps, int i, int count, SoundNetworkGroup g) {
 		comps[i] = count;
+		g.nodes.add(getNode(i));
 		
 		for(int j = 0; j < nodes.size(); j++) {
 			if(comps[j] == 0 && isConnected(i, j)) {
-				comps = searchComponent(comps, j, count);
+				g.nodes.add(getNode(j));
+				g.connections.add(getConnectionObject(i, j));
+				comps = searchComponent(comps, j, count, g);
 			}
 		}
 		return comps;
 	}
 	
-	public int countComponents() {
-		int count = 0;
+	public SoundNetworkGroup[] countComponents() {
+		SoundNetworkGroup[] newGroups = new SoundNetworkGroup[8];
+		int newGroupCount = 0;
+		int count = -1;
 		int[] comps = new int[nodes.size()];
 		for(int i = 0; i < nodes.size(); i++) {
 			if(comps[i] == 0) {
 				count++;
-				comps = searchComponent(comps, i, count);
+				newGroupCount++;
+				newGroups[newGroupCount] = new SoundNetworkGroup(SoundNetwork.findGroupID());
+				comps = searchComponent(comps, i, count, newGroups[newGroupCount]);
 			}
 		}
-		return count;
+		return newGroups;
 	}
 	
 	public boolean hasPath(int n1, int n2) {
@@ -102,6 +121,15 @@ public class SoundNetworkGroup implements Serializable {
 			}
 		}
 		return -1;
+	}
+	
+	public SoundNetworkConnection getConnectionObject(int n1, int n2) {
+		for(SoundNetworkConnection c : connections) {
+			if(c.node1 == n1 && c.node2 == n2) {
+				return c;
+			}
+		}
+		return null;
 	}
 	
 	public boolean isConnected(int n1, int n2) {

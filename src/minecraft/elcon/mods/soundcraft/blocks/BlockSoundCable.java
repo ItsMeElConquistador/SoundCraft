@@ -31,7 +31,7 @@ public class BlockSoundCable extends BlockContainer {
 	
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int par6, float xpos, float ypos, float zpos) {
-		if(player.getHeldItem().getItem() instanceof ItemDye) {
+		if(player.getHeldItem() != null && player.getHeldItem().getItem() instanceof ItemDye) {
 			TileEntitySoundCable te = (TileEntitySoundCable) world.getBlockTileEntity(x, y, z);
 			if(te == null) {
 				te = new TileEntitySoundCable();
@@ -214,7 +214,7 @@ public class BlockSoundCable extends BlockContainer {
 		}
 		TileEntitySoundObject obj1 = (TileEntitySoundObject) world.getBlockTileEntity(x1, y1, z1);
 		TileEntitySoundObject obj2 = (TileEntitySoundObject) world.getBlockTileEntity(x2, y2, z2);
-		SoundNetwork.connectGroups(obj1, x1, y1, z1, obj2, x2, y2, z2);
+		SoundNetwork.connectGroups(obj1, obj2);
 	}
 	
 	public void unconnectCable(World world, int x1, int y1, int z1, int x2, int y2, int z2, int direction1, int direction2) {
@@ -244,7 +244,7 @@ public class BlockSoundCable extends BlockContainer {
 		}
 		TileEntitySoundObject obj1 = (TileEntitySoundObject) world.getBlockTileEntity(x1, y1, z1);
 		TileEntitySoundObject obj2 = (TileEntitySoundObject) world.getBlockTileEntity(x2, y2, z2);
-		//SoundNetwork.unconnectGroups(obj1, x1, y1, z1, obj2, x2, y2, z2);
+		SoundNetwork.unconnectGroups(obj1, obj2);
 	}
 	
 	public boolean canConnectToCable(World world, int x1, int y1, int z1, int x2, int y2, int z2) {
