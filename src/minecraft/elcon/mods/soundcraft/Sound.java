@@ -1,4 +1,4 @@
-package elcon.mods.soundcraft.network;
+package elcon.mods.soundcraft;
 
 public class Sound {
 

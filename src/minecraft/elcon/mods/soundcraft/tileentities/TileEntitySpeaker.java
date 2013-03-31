@@ -1,6 +1,6 @@
 package elcon.mods.soundcraft.tileentities;
 
-import elcon.mods.soundcraft.network.Sound;
+import elcon.mods.soundcraft.Sound;
 
 public class TileEntitySpeaker extends TileEntitySoundAcceptor {
 
@@ -11,7 +11,6 @@ public class TileEntitySpeaker extends TileEntitySoundAcceptor {
 
 	@Override
 	public void receiveSound(Sound sound) {
-		System.out.println("received sound: " + sound.name);
 		worldObj.playSound(xCoord, yCoord, zCoord, sound.name, 1.0F, 1.0F, false);
 	}
 }

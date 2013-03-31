@@ -46,6 +46,7 @@ public class TileEntitySoundCable extends TileEntitySoundConductor {
 		}
 	}
 	
+	@Override
 	public void writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
 		nbt.setInteger("color", color);

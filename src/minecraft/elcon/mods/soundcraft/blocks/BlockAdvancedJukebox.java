@@ -13,9 +13,6 @@ import net.minecraft.util.Icon;
 import net.minecraft.world.World;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import elcon.mods.soundcraft.network.Sound;
-import elcon.mods.soundcraft.network.SoundNetwork;
-import elcon.mods.soundcraft.network.SoundNetworkGroup;
 import elcon.mods.soundcraft.tileentities.TileEntityAdvancedJukebox;
 
 public class BlockAdvancedJukebox extends BlockContainer {
@@ -40,11 +37,6 @@ public class BlockAdvancedJukebox extends BlockContainer {
 				if(te == null) {
 					te = new TileEntityAdvancedJukebox();
 					world.setBlockTileEntity(par2, par3, par4, te);
-				}				
-	
-				SoundNetworkGroup group = SoundNetwork.getGroup(te.group);
-				if(group != null) {
-					group.sendSound(te, new Sound(recordName));
 				}
 			}			
 			return false;

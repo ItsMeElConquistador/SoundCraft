@@ -45,6 +45,7 @@ Thumbs.db
 /lib/*
 /logs/*
 /modsrc/*
+/oldsrc/*
 /reobf/*
 /runtime/*
 /src/minecraft/cpw/*

@@ -19,8 +19,8 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import elcon.mods.soundcraft.SoundCableType;
 import elcon.mods.soundcraft.SoundCraftConfig;
-import elcon.mods.soundcraft.network.SoundNetwork;
 import elcon.mods.soundcraft.tileentities.TileEntitySoundCable;
+import elcon.mods.soundcraft.tileentities.TileEntitySoundConductor;
 import elcon.mods.soundcraft.tileentities.TileEntitySoundObject;
 
 public class BlockSoundCable extends BlockContainer {
@@ -212,9 +212,14 @@ public class BlockSoundCable extends BlockContainer {
 			
 			world.markBlockForUpdate(x2, y2, z2);
 		}
-		TileEntitySoundObject obj1 = (TileEntitySoundObject) world.getBlockTileEntity(x1, y1, z1);
-		TileEntitySoundObject obj2 = (TileEntitySoundObject) world.getBlockTileEntity(x2, y2, z2);
-		SoundNetwork.connectGroups(obj1, obj2);
+		TileEntitySoundConductor obj1 = (TileEntitySoundConductor) world.getBlockTileEntity(x1, y1, z1);
+		TileEntitySoundConductor obj2 = (TileEntitySoundConductor) world.getBlockTileEntity(x2, y2, z2);
+		if(obj1 != null) {
+			obj1.neighbors[direction1] = obj2;
+		}
+		if(obj2 != null) {
+			obj2.neighbors[direction2] = obj1;
+		}
 	}
 	
 	public void unconnectCable(World world, int x1, int y1, int z1, int x2, int y2, int z2, int direction1, int direction2) {
@@ -242,9 +247,14 @@ public class BlockSoundCable extends BlockContainer {
 			
 			world.markBlockForUpdate(x2, y2, z2);
 		}
-		TileEntitySoundObject obj1 = (TileEntitySoundObject) world.getBlockTileEntity(x1, y1, z1);
-		TileEntitySoundObject obj2 = (TileEntitySoundObject) world.getBlockTileEntity(x2, y2, z2);
-		SoundNetwork.unconnectGroups(obj1, obj2);
+		TileEntitySoundConductor obj1 = (TileEntitySoundConductor) world.getBlockTileEntity(x1, y1, z1);
+		TileEntitySoundConductor obj2 = (TileEntitySoundConductor) world.getBlockTileEntity(x2, y2, z2);
+		if(obj1 != null) {
+			obj1.neighbors[direction1] = null;
+		}
+		if(obj2 != null) {
+			obj2.neighbors[direction2] = null;
+		}
 	}
 	
 	public boolean canConnectToCable(World world, int x1, int y1, int z1, int x2, int y2, int z2) {

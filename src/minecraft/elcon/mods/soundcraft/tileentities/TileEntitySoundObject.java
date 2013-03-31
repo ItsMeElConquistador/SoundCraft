@@ -2,8 +2,6 @@ package elcon.mods.soundcraft.tileentities;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import elcon.mods.soundcraft.network.SoundNetwork;
-import elcon.mods.soundcraft.network.SoundNetworkGroup;
 
 public class TileEntitySoundObject extends TileEntity {
 

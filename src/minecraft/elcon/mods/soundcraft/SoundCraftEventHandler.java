@@ -13,7 +13,7 @@ import net.minecraftforge.event.world.WorldEvent;
 
 public class SoundCraftEventHandler {
 
-	@ForgeSubscribe
+	/*@ForgeSubscribe
 	public void worldLoad(WorldEvent.Load event) {
 		if(!event.world.isRemote) {
 			SoundCraftSaveHandler sh = new SoundCraftSaveHandler(event.world.getSaveHandler(), event.world);
@@ -27,7 +27,7 @@ public class SoundCraftEventHandler {
 			SoundCraftSaveHandler sh = new SoundCraftSaveHandler(event.world.getSaveHandler(), event.world);
 			sh.save();
 		}
-	}
+	}*/
 	
 	@ForgeSubscribe
 	public void onPlayBackgroundMusic(PlayBackgroundMusicEvent event) {

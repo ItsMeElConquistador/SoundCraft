@@ -1,6 +1,6 @@
 package elcon.mods.soundcraft.tileentities;
 
-import elcon.mods.soundcraft.network.Sound;
+import elcon.mods.soundcraft.Sound;
 
 public abstract class TileEntitySoundAcceptor extends TileEntitySoundObject {
 
