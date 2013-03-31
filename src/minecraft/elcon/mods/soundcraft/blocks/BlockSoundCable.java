@@ -6,6 +6,8 @@ import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemDye;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
@@ -25,6 +27,20 @@ public class BlockSoundCable extends BlockContainer {
 
 	public BlockSoundCable(int i) {
 		super(i, Material.cloth);
+	}
+	
+	@Override
+	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int par6, float xpos, float ypos, float zpos) {
+		if(player.getHeldItem().getItem() instanceof ItemDye) {
+			TileEntitySoundCable te = (TileEntitySoundCable) world.getBlockTileEntity(x, y, z);
+			if(te == null) {
+				te = new TileEntitySoundCable();
+				world.setBlockTileEntity(x, y, z, te);
+			}
+			te.color = player.getHeldItem().getItemDamage();
+			world.markBlockForUpdate(x, y, z);
+		}
+		return false;
 	}
 	
 	public AxisAlignedBB getSelectedBoundingBoxFromPool(World world, int x, int y, int z){
