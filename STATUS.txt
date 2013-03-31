@@ -1,13 +1,19 @@
+
+Streaming
+
+
+
+
+======= Old =======
+
 Going to stream some time tomorrow (March 31, 2013)  probably.
 
 Going to continue working on the sound network.
 
 #modjam
 
+==========
 
-
-
-======= Old =======
 Going to stream today (March 30, 2013) at 18:00 GMT.
 
 Going to work on the sound cable network.

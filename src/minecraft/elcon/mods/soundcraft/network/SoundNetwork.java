@@ -172,7 +172,7 @@ public class SoundNetwork {
 					if(tempGroups.containsKey(id)) {
 						NBTTagCompound nbt = new NBTTagCompound();
 						if(save.tileEntity.equalsIgnoreCase("SoundCable")) {
-							
+							nbt.setInteger("", par2);
 						} else if(save.tileEntity.equalsIgnoreCase("Speaker")) {
 							
 						} else if(save.tileEntity.equalsIgnoreCase("AdvancedJukebox")) {

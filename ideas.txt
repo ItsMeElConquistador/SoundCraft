@@ -24,7 +24,11 @@ Sound Cables
 		
 Speakers
 	ID:		1651
-	DATA: none
+	DATA: 	none
+	RENDER: normal
+Advanced
+	ID:		1652
+	DATA: 	playing
 	RENDER: normal
 Radio
 Recording
