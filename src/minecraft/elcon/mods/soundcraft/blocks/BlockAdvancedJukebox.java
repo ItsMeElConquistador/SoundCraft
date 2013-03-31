@@ -16,6 +16,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import elcon.mods.soundcraft.network.Sound;
 import elcon.mods.soundcraft.network.SoundNetwork;
 import elcon.mods.soundcraft.network.SoundNetworkGroup;
+import elcon.mods.soundcraft.tileentities.TileEntityAdvancedJukebox;
 
 public class BlockAdvancedJukebox extends BlockContainer {
 

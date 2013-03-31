@@ -17,7 +17,7 @@ import net.minecraft.tileentity.TileEntity;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import elcon.mods.soundcraft.Coordinates;
-import elcon.mods.soundcraft.blocks.TileEntitySoundObject;
+import elcon.mods.soundcraft.tileentities.TileEntitySoundObject;
 
 public class SoundNetwork {
 
@@ -162,24 +162,12 @@ public class SoundNetwork {
 			FileInputStream fis = new FileInputStream(file.getAbsolutePath());
 			GZIPInputStream gzis = new GZIPInputStream(fis);
 			ObjectInputStream in = new ObjectInputStream(gzis);
-			ArrayList<SoundObjectSave> saves = (ArrayList<SoundObjectSave>) in.readObject();
+			ArrayList<SoundNetworkNode> saves = (ArrayList<SoundNetworkNode>) in.readObject();
 			
 			HashMap<Integer, SoundNetworkGroup> tempGroups = new HashMap<Integer, SoundNetworkGroup>();
 			
-			for(SoundObjectSave save : saves) {
-				if(save != null) {
-					int id = save.groupID;
-					if(tempGroups.containsKey(id)) {
-						NBTTagCompound nbt = new NBTTagCompound();
-						if(save.tileEntity.equalsIgnoreCase("SoundCable")) {
-							nbt.setInteger("", par2);
-						} else if(save.tileEntity.equalsIgnoreCase("Speaker")) {
-							
-						} else if(save.tileEntity.equalsIgnoreCase("AdvancedJukebox")) {
-							
-						}
-					}
-				}
+			for(SoundNetworkNode save : saves) {
+				
 			}
 			
 			FMLCommonHandler.instance().getFMLLogger().log(Level.INFO, "[SoundCraft] Loaded the sound network");
@@ -198,18 +186,11 @@ public class SoundNetwork {
 			GZIPOutputStream gzos = new GZIPOutputStream(fos);
 			ObjectOutputStream out = new ObjectOutputStream(gzos);
 			
-			ArrayList<SoundObjectSave> saves = new ArrayList<SoundObjectSave>();
+			ArrayList<SoundNetworkNode> saves = new ArrayList<SoundNetworkNode>();
 			
 			for(SoundNetworkGroup group : groups.values()) {
 				if(group != null) {
-					for(ISoundAcceptor o: group.acceptors) {
-						TileEntitySoundObject obj = (TileEntitySoundObject) o;
-						saves.add(new SoundObjectSave(obj.xCoord, obj.yCoord, obj.zCoord, obj.group, obj.getClass().getName().replaceAll("Tile", ""), false));
-					}
-					for(ISoundSource o: group.sources) {
-						TileEntitySoundObject obj = (TileEntitySoundObject) o;
-						saves.add(new SoundObjectSave(obj.xCoord, obj.yCoord, obj.zCoord, obj.group, obj.getClass().getName().replaceAll("Tile", ""), true));
-					}
+					
 				}
 			}
 			

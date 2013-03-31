@@ -10,7 +10,7 @@ import com.google.common.io.ByteStreams;
 
 import cpw.mods.fml.common.network.IPacketHandler;
 import cpw.mods.fml.common.network.Player;
-import elcon.mods.soundcraft.blocks.TileEntitySoundCable;
+import elcon.mods.soundcraft.tileentities.TileEntitySoundCable;
 
 public class SoundCraftPacketHandler implements IPacketHandler {
 	

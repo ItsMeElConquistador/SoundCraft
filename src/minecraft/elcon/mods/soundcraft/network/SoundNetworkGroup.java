@@ -3,24 +3,122 @@ package elcon.mods.soundcraft.network;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import elcon.mods.soundcraft.tileentities.TileEntitySoundAcceptor;
+import elcon.mods.soundcraft.tileentities.TileEntitySoundSource;
+
 public class SoundNetworkGroup implements Serializable {
 
 	public int id;
 	
-	public ArrayList<ISoundSource> sources = new ArrayList<ISoundSource>();
-	public ArrayList<ISoundAcceptor> acceptors = new ArrayList<ISoundAcceptor>();
+	public ArrayList<SoundNetworkNode> nodes = new ArrayList<SoundNetworkNode>();
+	public ArrayList<SoundNetworkConnection> connections = new ArrayList<SoundNetworkConnection>();
 	
-	public SoundNetworkGroup(int i) {
+	public ArrayList<TileEntitySoundSource> sources = new ArrayList<TileEntitySoundSource>();
+	public ArrayList<TileEntitySoundAcceptor> acceptors = new ArrayList<TileEntitySoundAcceptor>();	
+	
+	public SoundNetworkGroup(int i, SoundNetworkConnection... cs) {
 		id = i;
+		for(SoundNetworkConnection c : cs) {
+			connections.add(c);
+			SoundNetworkNode n1;
+			SoundNetworkNode n2;
+			if(!containsNode(c.node1)) {
+				n1 = new SoundNetworkNode(c.node1);
+				nodes.add(n1);
+			} else {
+				n1 = getNode(c.node1);
+			}
+			if(!containsNode(c.node2)) {
+				n2 = new SoundNetworkNode(c.node2);
+				nodes.add(n2);
+			} else {
+				n2 = getNode(c.node2);
+			}
+		}
 	}
 	
-	public void sendSound(ISoundSource source, Sound sound) {
+	public void sendSound(TileEntitySoundSource source, Sound sound) {
 		if(sources.contains(source)) {
-			for(ISoundAcceptor acceptor : acceptors) {
+			for(TileEntitySoundAcceptor acceptor : acceptors) {
 				if(acceptor.canAcceptSound(sound)) {
 					acceptor.receiveSound(sound);
 				}
 			}
 		}
+	}
+	
+	public int[] searchComponent(int[] comps, int i, int count) {
+		comps[i] = count;
+		
+		for(int j = 0; j < nodes.size(); j++) {
+			if(comps[j] == 0 && isConnected(i, j)) {
+				comps = searchComponent(comps, j, count);
+			}
+		}
+		return comps;
+	}
+	
+	public int countComponents() {
+		int count = 0;
+		int[] comps = new int[nodes.size()];
+		for(int i = 0; i < nodes.size(); i++) {
+			if(comps[i] == 0) {
+				count++;
+				comps = searchComponent(comps, i, count);
+			}
+		}
+		return count;
+	}
+	
+	public boolean hasPath(int n1, int n2) {
+		return false;
+	}
+	
+	public void printAllNodes() {
+		for(SoundNetworkNode n : nodes) {
+			System.out.println(n.id);
+		}
+	}
+	
+	public void printAllConnections() {
+		for(SoundNetworkConnection c : connections) {
+			System.out.println(Character.toString((char) (c.node1 + 'A')) + " to " + Character.toString((char) (c.node2 + 'A')) + " with value " + c.value);
+		}
+	}
+	
+	public SoundNetworkNode getNode(int i) {
+		for(SoundNetworkNode n : nodes) {
+			if(n.id == i) {
+				return n;
+			}
+		}
+		return null;
+	}
+	
+	public int getConnection(int n1, int n2) {
+		for(SoundNetworkConnection c : connections) {
+			if(c.node1 == n1 && c.node2 == n2) {
+				return c.value;
+			}
+		}
+		return -1;
+	}
+	
+	public boolean isConnected(int n1, int n2) {
+		for(SoundNetworkConnection c : connections) {
+			if(c.node1 == n1 && c.node2 == n2) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public boolean containsNode(int id) {
+		for(SoundNetworkNode n : nodes) {
+			if(n.id == id) {
+				return true;
+			}
+		}
+		return false;
 	}
 }

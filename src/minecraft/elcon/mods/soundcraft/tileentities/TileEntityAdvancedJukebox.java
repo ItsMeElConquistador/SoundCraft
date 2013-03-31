@@ -1,4 +1,4 @@
-package elcon.mods.soundcraft.blocks;
+package elcon.mods.soundcraft.tileentities;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;

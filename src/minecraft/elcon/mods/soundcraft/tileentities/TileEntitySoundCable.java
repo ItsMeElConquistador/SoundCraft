@@ -1,4 +1,4 @@
-package elcon.mods.soundcraft.blocks;
+package elcon.mods.soundcraft.tileentities;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;

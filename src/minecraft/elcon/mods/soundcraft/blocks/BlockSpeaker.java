@@ -12,6 +12,7 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import elcon.mods.soundcraft.tileentities.TileEntitySpeaker;
 
 public class BlockSpeaker extends BlockContainer {
 

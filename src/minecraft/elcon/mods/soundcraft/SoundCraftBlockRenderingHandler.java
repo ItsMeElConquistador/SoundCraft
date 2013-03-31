@@ -5,7 +5,7 @@ import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.world.IBlockAccess;
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 import elcon.mods.soundcraft.blocks.BlockSoundCable;
-import elcon.mods.soundcraft.blocks.TileEntitySoundCable;
+import elcon.mods.soundcraft.tileentities.TileEntitySoundCable;
 
 public class SoundCraftBlockRenderingHandler implements ISimpleBlockRenderingHandler {
 

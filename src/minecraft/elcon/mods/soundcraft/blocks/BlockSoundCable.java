@@ -18,6 +18,8 @@ import cpw.mods.fml.relauncher.SideOnly;
 import elcon.mods.soundcraft.SoundCableType;
 import elcon.mods.soundcraft.SoundCraftConfig;
 import elcon.mods.soundcraft.network.SoundNetwork;
+import elcon.mods.soundcraft.tileentities.TileEntitySoundCable;
+import elcon.mods.soundcraft.tileentities.TileEntitySoundObject;
 
 public class BlockSoundCable extends BlockContainer {
 
