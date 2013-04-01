@@ -24,7 +24,7 @@ public class SoundCraftConfig {
 		soundCableRenderID = config.get("RenderID", "soundCable", 300).getInt();
 		
 		circuitID = config.getItem("circuit", 28500).getInt();
-		speakerID = config.getItem("speaker", 28501).getInt();
+		speakerItemID = config.getItem("speaker", 28501).getInt();
 		
 		setBlockConnectsToCable(soundCableID, true);
 		setBlockConnectsToCable(speakerID, true);

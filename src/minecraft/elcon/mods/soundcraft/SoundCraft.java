@@ -125,12 +125,14 @@ public class SoundCraft {
 		/*GameRegistry.addRecipe(new ItemStack(soundCableItem, 1, 2),
 			"www", "iii", "ww", 'i', "ingotSilver", 'w', Block.cloth
 		);*/
-		GameRegistry.addRecipe(new ItemStack(soundCableItem, 1, 3),
+		GameRegistry.addRecipe(new ItemStack(soundCable, 1, 0),
 			"www", "iii", "ww", 'i', Item.ingotIron, 'w', Block.cloth
 		);
-		GameRegistry.addRecipe(new ItemStack(soundCableItem, 1, 4),
+		GameRegistry.addRecipe(new ItemStack(soundCable, 1, 4),
 			"www", "iii", "ww", 'i', Item.ingotGold, 'w', Block.cloth
 		);
+		
+		
 		
 		//GameRegistry.addRecipe();
 	}
