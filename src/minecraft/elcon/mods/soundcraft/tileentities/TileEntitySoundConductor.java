@@ -1,6 +1,6 @@
 package elcon.mods.soundcraft.tileentities;
 
-import elcon.mods.soundcraft.Sound;
+import elcon.mods.soundcraft.sounds.Sound;
 
 public abstract class TileEntitySoundConductor extends TileEntitySoundObject {
 	

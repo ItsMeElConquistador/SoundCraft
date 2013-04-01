@@ -1,11 +1,10 @@
 package elcon.mods.soundcraft.tileentities;
 
-import elcon.mods.soundcraft.Sound;
+import elcon.mods.soundcraft.sounds.Sound;
 
 public abstract class TileEntitySoundSource extends TileEntitySoundObject {
 
 	public void sendSound(Sound sound) {
-		System.out.println("sending sound at: " + xCoord + "," + yCoord + "," + zCoord);
 		for(int i = 0; i < 6; i++) {
 			if(neighbors[i] != null ) {
 				if(neighbors[i] instanceof TileEntitySoundConductor) {

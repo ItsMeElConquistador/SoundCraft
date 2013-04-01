@@ -2,8 +2,10 @@ package elcon.mods.soundcraft;
 
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.item.Item;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.oredict.OreDictionary;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.Init;
 import cpw.mods.fml.common.Mod.Instance;
@@ -19,12 +21,13 @@ import cpw.mods.fml.common.registry.LanguageRegistry;
 import elcon.mods.soundcraft.blocks.BlockAdvancedJukebox;
 import elcon.mods.soundcraft.blocks.BlockSoundCable;
 import elcon.mods.soundcraft.blocks.BlockSpeaker;
+import elcon.mods.soundcraft.items.ItemSoundCable;
 import elcon.mods.soundcraft.tileentities.TileEntityAdvancedJukebox;
 import elcon.mods.soundcraft.tileentities.TileEntitySoundCable;
 import elcon.mods.soundcraft.tileentities.TileEntitySpeaker;
 
 @Mod(modid = "SoundCraft", name = "SoundCraft", version = "1.0.0")
-@NetworkMod(clientSideRequired = true, serverSideRequired = false, packetHandler = SoundCraftPacketHandler.class, channels = {"SoundCraft", "SCCable"})
+@NetworkMod(clientSideRequired = true, serverSideRequired = false, packetHandler = SoundCraftPacketHandler.class, channels = {"SoundCraft", "SCCable", "SCSound"})
 public class SoundCraft {
 
 	@Instance("SoundCraft")
@@ -40,6 +43,8 @@ public class SoundCraft {
 	public static Block soundCable;
 	public static Block speaker;
 	public static Block advancedJukebox;
+	
+	public static Item soundCableItem;
 	
 	@PreInit
 	public void preInit(FMLPreInitializationEvent event) {
@@ -58,6 +63,9 @@ public class SoundCraft {
 		speaker = new BlockSpeaker(SoundCraftConfig.speakerID).setStepSound(Block.soundMetalFootstep).setHardness(5.0F).setResistance(10.0F).setCreativeTab(tabSoundCraft).setUnlocalizedName("speaker");
 		advancedJukebox = new BlockAdvancedJukebox(SoundCraftConfig.advancedJukeboxID).setStepSound(Block.soundMetalFootstep).setHardness(5.0F).setResistance(10.0F).setCreativeTab(tabSoundCraft).setUnlocalizedName("advancedJukebox");
 		
+		//init items
+		soundCableItem = new ItemSoundCable(SoundCraftConfig.soundCableID - 256, soundCable);
+		
 		//register blocks
 		GameRegistry.registerBlock(soundCable, "SoundCraft_soundCable");
 		GameRegistry.registerBlock(speaker, "SoundCraft_speaker");
@@ -72,6 +80,9 @@ public class SoundCraft {
 		LanguageRegistry.addName(soundCable, "Sound Cable");
 		LanguageRegistry.addName(speaker, "Speaker");
 		LanguageRegistry.addName(advancedJukebox, "Advanced Jukebox");
+		
+		//add item names
+		LanguageRegistry.addName(soundCableItem, "Sound Cable");
 		
 		//add localizations
 		LanguageRegistry.instance().addStringLocalization("itemGroup.SoundCraft", "SoundCraft");

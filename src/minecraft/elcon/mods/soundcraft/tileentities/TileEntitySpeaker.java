@@ -1,6 +1,9 @@
 package elcon.mods.soundcraft.tileentities;
 
-import elcon.mods.soundcraft.Sound;
+import net.minecraft.entity.player.EntityPlayerMP;
+import elcon.mods.soundcraft.SoundCraft;
+import elcon.mods.soundcraft.SoundCraftPacketHandler;
+import elcon.mods.soundcraft.sounds.Sound;
 
 public class TileEntitySpeaker extends TileEntitySoundAcceptor {
 
@@ -11,11 +14,14 @@ public class TileEntitySpeaker extends TileEntitySoundAcceptor {
 
 	@Override
 	public void receiveSound(Sound sound) {
-		System.out.println("received sound: " + sound.name);
-		if(sound.name.equalsIgnoreCase("stop")) {
-			
-		} else {
-			worldObj.playSound(xCoord, yCoord, zCoord, sound.name, 1.0F, 1.0F, false);
+		if(SoundCraft.proxy.getMCServer().worldServerForDimension(worldObj.provider.dimensionId) != null) {
+			for(Object o :SoundCraft.proxy.getMCServer().worldServerForDimension(worldObj.provider.dimensionId).playerEntities) {
+				EntityPlayerMP player = null;
+				if(o instanceof EntityPlayerMP) {
+					player = (EntityPlayerMP) o;
+					SoundCraftPacketHandler.sendSound(player, xCoord, yCoord, zCoord, sound.type, sound);
+				}
+			}	
 		}
 	}
 }
