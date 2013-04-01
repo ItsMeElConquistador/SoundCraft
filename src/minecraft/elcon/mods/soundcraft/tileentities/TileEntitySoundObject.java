@@ -10,6 +10,15 @@ public class TileEntitySoundObject extends TileEntity {
 	public int group;
 	public int node;
 	
+	public boolean checkedNeighbors = false;
+	
+	@Override
+	public void updateEntity() {
+		if(!checkedNeighbors) {
+			
+		}
+	}
+	
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);

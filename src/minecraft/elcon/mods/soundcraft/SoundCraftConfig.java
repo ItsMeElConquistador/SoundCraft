@@ -12,6 +12,8 @@ public class SoundCraftConfig {
 	public static int advancedJukeboxID = 1652;
 	
 	public static int soundCableRenderID = 300;
+
+	//public static int circuitID = ;
 	
 	public static void load(Configuration config) {
 		soundCableID = config.getBlock("soundCable", 1650).getInt();

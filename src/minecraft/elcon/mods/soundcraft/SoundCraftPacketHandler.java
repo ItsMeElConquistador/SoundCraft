@@ -31,6 +31,9 @@ public class SoundCraftPacketHandler implements IPacketHandler {
 		case 50: 
 			handleTileEntitySoundCable(dat);
 			break;
+		case 51:
+			handleTileEntityUpdate(dat);
+			break;
 		}
 	}
 	
@@ -46,7 +49,7 @@ public class SoundCraftPacketHandler implements IPacketHandler {
 		float pitch = dat.readFloat();
 		
 		if(type == 0) {
-			Minecraft.getMinecraft().theWorld.playSound(x, y, z, name, volume, pitch, false);
+			//Minecraft.getMinecraft().theWorld.playSound(x, y, z, name, volume, pitch, false);
 		} else if(type == 1) {
 			if(name.equalsIgnoreCase("stop")) {
 				int discID = dat.readInt();				
@@ -56,9 +59,11 @@ public class SoundCraftPacketHandler implements IPacketHandler {
 				Minecraft.getMinecraft().sndManager.playStreaming(name, (float)x, (float)y, (float)z);
 			}
 		} else if(type == 2) {
-			Minecraft.getMinecraft().theWorld.playSound(x, y, z, name, volume, pitch, false);
+			//Minecraft.getMinecraft().theWorld.playSound(x, y, z, name, volume, pitch, false);
 		} else if(type == 3) {
 			
+		} else if(type == 4) {
+			Minecraft.getMinecraft().sndManager.playStreaming((String) null, (float)x, (float)y, (float)z);
 		}
 	}
 	
@@ -110,6 +115,28 @@ public class SoundCraftPacketHandler implements IPacketHandler {
 		int y = dat.readInt();
 		int z = dat.readInt();
 		
+		System.out.println("received tile entity update: " + x + "," + y + "," + z);
+		
 		Minecraft.getMinecraft().theWorld.markBlockForRenderUpdate(x, y, z);
+	}
+	
+	public static void sendTileEntityUpdate(EntityPlayerMP player, int x, int y, int z) {
+		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+		DataOutputStream dos = new DataOutputStream(bos);
+		try {
+			dos.writeByte(51);
+			dos.writeInt(x);
+			dos.writeInt(y);
+			dos.writeInt(z);
+			
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		Packet250CustomPayload packet = new Packet250CustomPayload();
+		packet.channel = "SoundCraft";
+		packet.data = bos.toByteArray();
+		packet.length = bos.size();
+		packet.isChunkDataPacket = true;
+		player.playerNetServerHandler.sendPacketToPlayer(packet);
 	}
 }

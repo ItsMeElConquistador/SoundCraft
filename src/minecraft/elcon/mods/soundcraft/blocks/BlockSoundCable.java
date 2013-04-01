@@ -9,6 +9,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemDye;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.packet.Packet250CustomPayload;
@@ -21,7 +22,9 @@ import net.minecraft.world.World;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import elcon.mods.soundcraft.SoundCableType;
+import elcon.mods.soundcraft.SoundCraft;
 import elcon.mods.soundcraft.SoundCraftConfig;
+import elcon.mods.soundcraft.SoundCraftPacketHandler;
 import elcon.mods.soundcraft.tileentities.TileEntitySoundCable;
 import elcon.mods.soundcraft.tileentities.TileEntitySoundConductor;
 import elcon.mods.soundcraft.tileentities.TileEntitySoundObject;
@@ -30,6 +33,8 @@ public class BlockSoundCable extends BlockContainer {
 
 	public BlockSoundCable(int i) {
 		super(i, Material.cloth);
+		
+		setTickRandomly(true);
 	}
 	
 	@Override
@@ -267,7 +272,7 @@ public class BlockSoundCable extends BlockContainer {
 		world.markBlockForRenderUpdate(x2, y2, z2);
 	}
 	
-	public boolean canConnectToCable(World world, int x1, int y1, int z1, int x2, int y2, int z2) {
+	public boolean canConnectToCable(World world, int x1, int y1, int z1, int x2, int y2, int z2, int direction1, int direction2) {
 		int id1 = world.getBlockId(x1, y1, z1);
 		int id2 = world.getBlockId(x2, y2, z2);
 		if(id1 == id2) {
@@ -286,7 +291,30 @@ public class BlockSoundCable extends BlockContainer {
 			}
 		} else {
 			if(SoundCraftConfig.blockConnectsToCable[id1] && SoundCraftConfig.blockConnectsToCable[id2]) {
-				return true;
+				boolean ret = true;
+				if(id1 == SoundCraftConfig.speakerID) {
+					int meta = world.getBlockMetadata(x1, y1, z1);
+					if(BlockSpeaker.isFront(directionToBlockSide(direction2), meta)) {
+						ret = false;
+					}
+				} 
+				if(id2 == SoundCraftConfig.speakerID) {
+					int meta = world.getBlockMetadata(x2, y2, z2);
+					if(BlockSpeaker.isFront(directionToBlockSide(direction1), meta)) {
+						ret = false;
+					}
+				}
+				if(id1 == SoundCraftConfig.advancedJukeboxID) {
+					if(BlockAdvancedJukebox.isTop(directionToBlockSide(direction2), 0)) {
+						ret = false;
+					}
+				} 
+				if(id2 == SoundCraftConfig.advancedJukeboxID) {
+					if(BlockAdvancedJukebox.isTop(directionToBlockSide(direction1), 0)) {
+						ret = false;
+					}
+				}
+				return ret;
 			}
 		}
 		return false;
@@ -301,35 +329,59 @@ public class BlockSoundCable extends BlockContainer {
 		}
 		int color = te.color;
 		
-		if(canConnectToCable(world, x, y, z, x - 1, y, z)) {
+		if(canConnectToCable(world, x, y, z, x - 1, y, z, 0, 1)) {
 			connectCable(world, x, y, z, x - 1, y, z, 0, 1);
 		} else {
 			unconnectCable(world, x, y, z, x - 1, y, z, 0, 1);
 		}
-		if(canConnectToCable(world, x, y, z, x + 1, y, z)) {
+		if(canConnectToCable(world, x, y, z, x + 1, y, z, 1, 0)) {
 			connectCable(world, x, y, z, x + 1, y, z, 1, 0);
 		} else {
 			unconnectCable(world, x, y, z, x + 1, y, z, 1, 0);
 		}
-		if(canConnectToCable(world, x, y, z, x, y - 1, z)) {
+		if(canConnectToCable(world, x, y, z, x, y - 1, z, 2, 3)) {
 			connectCable(world, x, y, z, x, y - 1, z, 2, 3);
 		} else {
 			unconnectCable(world, x, y, z, x, y - 1, z, 2, 3);
 		}
-		if(canConnectToCable(world, x, y, z, x, y + 1, z)) {
+		if(canConnectToCable(world, x, y, z, x, y + 1, z, 3, 2)) {
 			connectCable(world, x, y, z, x, y + 1, z, 3, 2);
 		} else {
 			unconnectCable(world, x, y, z, x, y + 1, z, 3, 2);
 		}
-		if(canConnectToCable(world, x, y, z, x, y, z - 1)) {
+		if(canConnectToCable(world, x, y, z, x, y, z - 1, 4, 5)) {
 			connectCable(world, x, y, z, x, y, z - 1, 4, 5);
 		} else {
 			unconnectCable(world, x, y, z, x, y, z - 1, 4, 5);
 		}
-		if(canConnectToCable(world, x, y, z, x, y, z + 1)) {
+		if(canConnectToCable(world, x, y, z, x, y, z + 1, 5, 4)) {
 			connectCable(world, x, y, z, x, y, z + 1, 5, 4);
 		} else {
 			unconnectCable(world, x, y, z, x, y, z + 1, 5, 4);
+		}
+	}
+	
+	public int directionToBlockSide(int i) {
+		switch(i) {
+		case 0: return 5;
+		case 1: return 4;
+		case 2: return 1;
+		case 3: return 0;
+		case 4: return 3;
+		case 5: return 2;
+		}
+		return 0;
+	}
+	
+	public void sendTileEntityUpdate(World world, int x, int y, int z) {
+		if(SoundCraft.proxy.getMCServer().worldServerForDimension(world.provider.dimensionId) != null) {
+			for(Object o :SoundCraft.proxy.getMCServer().worldServerForDimension(world.provider.dimensionId).playerEntities) {
+				EntityPlayerMP player = null;
+				if(o instanceof EntityPlayerMP) {
+					player = (EntityPlayerMP) o;
+					SoundCraftPacketHandler.sendTileEntityUpdate(player, x, y, z);
+				}
+			}	
 		}
 	}
 	
@@ -338,6 +390,7 @@ public class BlockSoundCable extends BlockContainer {
 		if(!world.isRemote) {
 			updateCableConnections(world, x, y, z);
 			world.markBlockForRenderUpdate(x, y, z);
+			sendTileEntityUpdate(world, x, y, z);
 		}
 	}
 	
@@ -346,6 +399,7 @@ public class BlockSoundCable extends BlockContainer {
 		if(!world.isRemote) {
 			updateCableConnections(world, x, y, z);
 			world.markBlockForRenderUpdate(x, y, z);
+			sendTileEntityUpdate(world, x, y, z);
 		}
 	}
 
@@ -354,6 +408,16 @@ public class BlockSoundCable extends BlockContainer {
 		if(!world.isRemote) {
 			updateCableConnections(world, x, y, z);
 			world.markBlockForRenderUpdate(x, y, z);
+			sendTileEntityUpdate(world, x, y, z);
+		}
+	}
+	
+	@Override
+	public void onNeighborBlockChange(World world, int x, int y, int z, int par5) {
+		if(!world.isRemote) {
+			updateCableConnections(world, x, y, z);
+			world.markBlockForRenderUpdate(x, y, z);
+			sendTileEntityUpdate(world, x, y, z);
 		}
 	}
 }

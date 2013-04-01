@@ -28,6 +28,10 @@ public class BlockAdvancedJukebox extends BlockContainer {
 	public BlockAdvancedJukebox(int i) {
 		super(i, Material.iron);
 	}
+	
+	public static boolean isTop(int i, int j) {
+		return i == 1;
+	}
 
 	public boolean onBlockActivated(World world, int par2, int par3, int par4, EntityPlayer entityPlayer, int par6, float par7, float par8, float par9) {
 		if(world.getBlockMetadata(par2, par3, par4) == 0) {
@@ -43,6 +47,8 @@ public class BlockAdvancedJukebox extends BlockContainer {
 				}
 				
 				te.sendSound(new SoundDisc(recordName, entityPlayer.getHeldItem().itemID, 1.0F, 1.0F));
+				
+				entityPlayer.getHeldItem().stackSize--;
 				
 				return true;
 			}			

@@ -5,7 +5,6 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.oredict.OreDictionary;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.Init;
 import cpw.mods.fml.common.Mod.Instance;
@@ -22,6 +21,7 @@ import elcon.mods.soundcraft.blocks.BlockAdvancedJukebox;
 import elcon.mods.soundcraft.blocks.BlockSoundCable;
 import elcon.mods.soundcraft.blocks.BlockSpeaker;
 import elcon.mods.soundcraft.items.ItemSoundCable;
+import elcon.mods.soundcraft.items.ItemSoundCraft;
 import elcon.mods.soundcraft.tileentities.TileEntityAdvancedJukebox;
 import elcon.mods.soundcraft.tileentities.TileEntitySoundCable;
 import elcon.mods.soundcraft.tileentities.TileEntitySpeaker;
@@ -45,6 +45,8 @@ public class SoundCraft {
 	public static Block advancedJukebox;
 	
 	public static Item soundCableItem;
+	public static Item circuit;
+	public static Item speakerItem;
 	
 	@PreInit
 	public void preInit(FMLPreInitializationEvent event) {
@@ -65,6 +67,7 @@ public class SoundCraft {
 		
 		//init items
 		soundCableItem = new ItemSoundCable(SoundCraftConfig.soundCableID - 256, soundCable);
+		//circuit = new ItemSoundCraft(SoundCraftConfig.circuitID, "circuit").setUnlocalizedName("circuit");
 		
 		//register blocks
 		GameRegistry.registerBlock(soundCable, "SoundCraft_soundCable");

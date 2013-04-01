@@ -1,5 +1,6 @@
 package elcon.mods.soundcraft;
 
+import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.client.event.sound.PlayBackgroundMusicEvent;
 import net.minecraftforge.client.event.sound.PlaySoundEffectEvent;
 import net.minecraftforge.client.event.sound.PlaySoundEffectSourceEvent;
@@ -14,14 +15,14 @@ import net.minecraftforge.event.world.WorldEvent;
 public class SoundCraftEventHandler {
 
 	/*@ForgeSubscribe
-	public void worldLoad(WorldEvent.Load event) {
+	public void worldLoad(WorldEvent.Load event) {		
 		if(!event.world.isRemote) {
 			SoundCraftSaveHandler sh = new SoundCraftSaveHandler(event.world.getSaveHandler(), event.world);
 			sh.load();
 		}
-	}
+	}*/
 	
-	@ForgeSubscribe
+	/*@ForgeSubscribe
 	public void worldSave(WorldEvent.Save event) {
 		if(!event.world.isRemote) {
 			SoundCraftSaveHandler sh = new SoundCraftSaveHandler(event.world.getSaveHandler(), event.world);

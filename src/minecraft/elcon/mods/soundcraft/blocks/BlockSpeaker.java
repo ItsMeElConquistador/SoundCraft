@@ -2,10 +2,11 @@ package elcon.mods.soundcraft.blocks;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
-import net.minecraft.block.BlockDirectional;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
@@ -14,7 +15,11 @@ import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import elcon.mods.soundcraft.SoundCraft;
 import elcon.mods.soundcraft.SoundCraftConfig;
+import elcon.mods.soundcraft.SoundCraftPacketHandler;
+import elcon.mods.soundcraft.sounds.SoundDisc;
+import elcon.mods.soundcraft.sounds.SoundStop;
 import elcon.mods.soundcraft.tileentities.TileEntitySpeaker;
 
 public class BlockSpeaker extends BlockContainer {
@@ -29,6 +34,25 @@ public class BlockSpeaker extends BlockContainer {
 	public static int getDirection(int i) {
         return i & 3;
     }
+	
+	public static boolean isFront(int i, int j) {
+		if(j == 0) {
+			return i == 3 ? true : false;
+		} else if(j == 1) {
+			return i == 4 ? true : false;
+		} else if(j == 2) {
+			return i == 2 ? true : false;
+		} else if(j == 3) {
+			return i == 5 ? true : false;
+		}
+		return i == 3 ? true : false;
+	}
+	
+	@Override
+	public boolean onBlockActivated(World world, int par2, int par3, int par4, EntityPlayer player, int par6, float par7, float par8, float par9) {
+		player.sendChatToPlayer("metadata: " + Integer.toString(world.getBlockMetadata(par2, par3, par4)));
+		return true;
+	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
@@ -96,12 +120,30 @@ public class BlockSpeaker extends BlockContainer {
 		if(!world.isRemote) {
 			updateConnections(world, x, y, z);
 		}
+		if(SoundCraft.proxy.getMCServer().worldServerForDimension(world.provider.dimensionId) != null) {
+			for(Object o :SoundCraft.proxy.getMCServer().worldServerForDimension(world.provider.dimensionId).playerEntities) {
+				EntityPlayerMP player = null;
+				if(o instanceof EntityPlayerMP) {
+					player = (EntityPlayerMP) o;
+					SoundCraftPacketHandler.sendSound(player, x, y, z, 4, new SoundStop());
+				}
+			}	
+		}
 	}
 	
 	@Override
 	public void onBlockDestroyedByPlayer(World world, int x, int y, int z, int par5) {
 		if(!world.isRemote) {
 			updateConnections(world, x, y, z);
+		}
+		if(SoundCraft.proxy.getMCServer().worldServerForDimension(world.provider.dimensionId) != null) {
+			for(Object o :SoundCraft.proxy.getMCServer().worldServerForDimension(world.provider.dimensionId).playerEntities) {
+				EntityPlayerMP player = null;
+				if(o instanceof EntityPlayerMP) {
+					player = (EntityPlayerMP) o;
+					SoundCraftPacketHandler.sendSound(player, x, y, z, 4, new SoundStop());
+				}
+			}	
 		}
 	}
 }
