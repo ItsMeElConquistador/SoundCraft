@@ -22,6 +22,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import elcon.mods.soundcraft.ClientProxy;
 import elcon.mods.soundcraft.SoundCableType;
 import elcon.mods.soundcraft.SoundCraft;
 import elcon.mods.soundcraft.SoundCraftConfig;
@@ -40,23 +41,23 @@ public class BlockSoundCable extends BlockContainer {
 	
 	@Override
     public int isProvidingWeakPower(IBlockAccess blockAccess, int x, int y, int z, int par5) {
-        TileEntitySoundCable tile = (TileEntitySoundCable) blockAccess.getBlockTileEntity(x, y, z);
+        /*TileEntitySoundCable tile = (TileEntitySoundCable) blockAccess.getBlockTileEntity(x, y, z);
         if(tile != null) {
         	if(tile.isDetector && tile.emitRedstone) {
         		return 15;
         	}
-        }
+        }*/
         return 0;
     }
     
     @Override
     public int isProvidingStrongPower(IBlockAccess blockAccess, int x, int y, int z, int par5) {
-    	TileEntitySoundCable tile = (TileEntitySoundCable) blockAccess.getBlockTileEntity(x, y, z);
+    	/*TileEntitySoundCable tile = (TileEntitySoundCable) blockAccess.getBlockTileEntity(x, y, z);
         if(tile != null) {
         	if(tile.isDetector && tile.emitRedstone) {
         		return 15;
         	}
-        }
+        }*/
         return 0;
     	/*int i1 = blockAccess.getBlockMetadata(x, y, z);
 
@@ -190,6 +191,7 @@ public class BlockSoundCable extends BlockContainer {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerIcons(IconRegister iconRegister) {
+		ClientProxy.crossIcon = iconRegister.registerIcon("soundcraft:cross");
 		SoundCableType.registerIcons(iconRegister);
 	}
 	

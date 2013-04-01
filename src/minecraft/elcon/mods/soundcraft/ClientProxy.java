@@ -1,6 +1,7 @@
 package elcon.mods.soundcraft;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.Icon;
 import net.minecraft.world.World;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import elcon.mods.soundcraft.gui.ContainerAdvancedJukebox;
@@ -9,6 +10,8 @@ import elcon.mods.soundcraft.tileentities.TileEntityAdvancedJukebox;
 
 public class ClientProxy extends CommonProxy {
 
+	public static Icon crossIcon;
+	
 	public SoundCraftBlockRenderingHandler blockRenderingHandler;
 	
 	@Override

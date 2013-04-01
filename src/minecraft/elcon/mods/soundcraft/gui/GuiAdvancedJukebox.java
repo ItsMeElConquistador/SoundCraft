@@ -16,7 +16,7 @@ public class GuiAdvancedJukebox extends GuiContainer {
 	
 	@Override
 	protected void drawGuiContainerForegroundLayer(int i, int j) {
-		fontRenderer.drawString(StatCollector.translateToLocal("soundcraft.advancedJukebox"), 96 + 8, 4, 4210752);
+		fontRenderer.drawString(StatCollector.translateToLocal("soundcraft.advancedJukebox"), 16 + 8, 4, 4210752);
 	}
 
 	@Override

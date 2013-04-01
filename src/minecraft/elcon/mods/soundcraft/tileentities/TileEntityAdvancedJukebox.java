@@ -1,5 +1,6 @@
 package elcon.mods.soundcraft.tileentities;
 
+import elcon.mods.soundcraft.gui.ContainerAdvancedJukebox;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemRecord;
@@ -11,23 +12,38 @@ public class TileEntityAdvancedJukebox extends TileEntitySoundSource implements 
 	public ItemStack[] stacks = new ItemStack[8];
 	
 	public ItemStack record;
+	
+	public ContainerAdvancedJukebox container;
+	
+	public boolean[] next = new boolean[8];
+	public boolean[] loop = new boolean[8];
 
-	public void readFromNBT(NBTTagCompound par1NBTTagCompound) {
-		super.readFromNBT(par1NBTTagCompound);
+	public void readFromNBT(NBTTagCompound nbt) {
+		super.readFromNBT(nbt);
 
-		if(par1NBTTagCompound.hasKey("RecordItem")) {
-			setRecord(ItemStack.loadItemStackFromNBT(par1NBTTagCompound.getCompoundTag("RecordItem")));
-		} else if(par1NBTTagCompound.getInteger("Record") > 0) {
-			setRecord(new ItemStack(par1NBTTagCompound.getInteger("Record"), 1, 0));
+		for(int i = 0; i < 8; i++) {
+			next[i] = nbt.getBoolean("next" + Integer.toString(i));
+			loop[i] = nbt.getBoolean("loop" + Integer.toString(i));
+		}
+		
+		if(nbt.hasKey("RecordItem")) {
+			setRecord(ItemStack.loadItemStackFromNBT(nbt.getCompoundTag("RecordItem")));
+		} else if(nbt.getInteger("Record") > 0) {
+			setRecord(new ItemStack(nbt.getInteger("Record"), 1, 0));
 		}
 	}
 
-	public void writeToNBT(NBTTagCompound par1NBTTagCompound) {
-		super.writeToNBT(par1NBTTagCompound);
+	public void writeToNBT(NBTTagCompound nbt) {
+		super.writeToNBT(nbt);
 
+		for(int i = 0; i < 8; i++) {
+			nbt.setBoolean("next" + Integer.toString(i), next[i]);
+			nbt.setBoolean("loop" + Integer.toString(i), loop[i]);
+		}
+		
 		if(getRecord() != null) {
-			par1NBTTagCompound.setCompoundTag("RecordItem", getRecord().writeToNBT(new NBTTagCompound()));
-			par1NBTTagCompound.setInteger("Record", getRecord().itemID);
+			nbt.setCompoundTag("RecordItem", getRecord().writeToNBT(new NBTTagCompound()));
+			nbt.setInteger("Record", getRecord().itemID);
 		}
 	}
 
@@ -57,15 +73,17 @@ public class TileEntityAdvancedJukebox extends TileEntitySoundSource implements 
 		if(stacks[i].stackSize <= j) {
 			stack = stacks[i];
 			stacks[i] = null;
-			return stack;
 		} else {
 			stack = stacks[i].splitStack(j);
 
 			if(stacks[i].stackSize == 0) {
 				stacks[i] = null;
 			}
-			return stack;
 		}
+		if(container != null) {
+			container.onCraftMatrixChanged(this);
+		}
+		return stack;
 	}
 
 	@Override
@@ -79,6 +97,9 @@ public class TileEntityAdvancedJukebox extends TileEntitySoundSource implements 
 
 	@Override
 	public void setInventorySlotContents(int i, ItemStack itemstack) {
+		if(container != null) {
+			container.onCraftMatrixChanged(this);
+		}
 		stacks[i] = itemstack;
 	}
 
@@ -104,7 +125,7 @@ public class TileEntityAdvancedJukebox extends TileEntitySoundSource implements 
 	
 	@Override
 	public boolean isStackValidForSlot(int i, ItemStack itemstack) {
-		if(itemstack != null) {
+		if(itemstack != null && itemstack.getItem() != null) {
 			if(itemstack.getItem() instanceof ItemRecord) {
 				return true;
 			}
