@@ -15,13 +15,13 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
+import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
 import elcon.mods.soundcraft.blocks.BlockAdvancedJukebox;
 import elcon.mods.soundcraft.blocks.BlockSoundCable;
 import elcon.mods.soundcraft.blocks.BlockSpeaker;
 import elcon.mods.soundcraft.items.ItemSoundCable;
-import elcon.mods.soundcraft.items.ItemSoundCraft;
 import elcon.mods.soundcraft.tileentities.TileEntityAdvancedJukebox;
 import elcon.mods.soundcraft.tileentities.TileEntitySoundCable;
 import elcon.mods.soundcraft.tileentities.TileEntitySpeaker;
@@ -89,9 +89,12 @@ public class SoundCraft {
 		
 		//add localizations
 		LanguageRegistry.instance().addStringLocalization("itemGroup.SoundCraft", "SoundCraft");
+		LanguageRegistry.instance().addStringLocalization("soundcraft.advancedJukebox", "en_US", "Advanced Jukebox");
 		
 		eventHandler = new SoundCraftEventHandler();
 		MinecraftForge.EVENT_BUS.register(eventHandler);
+		
+		NetworkRegistry.instance().registerGuiHandler(this, proxy);
 	}
 	
 	@PostInit
