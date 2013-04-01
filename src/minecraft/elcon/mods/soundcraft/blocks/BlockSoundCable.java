@@ -73,7 +73,7 @@ public class BlockSoundCable extends BlockContainer {
 
     @Override
     public boolean canProvidePower() {
-        return true;
+        return false;
     }
 	
 	@Override

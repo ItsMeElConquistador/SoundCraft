@@ -5,6 +5,7 @@ import net.minecraft.world.World;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import elcon.mods.soundcraft.gui.ContainerAdvancedJukebox;
 import elcon.mods.soundcraft.gui.GuiAdvancedJukebox;
+import elcon.mods.soundcraft.tileentities.TileEntityAdvancedJukebox;
 
 public class ClientProxy extends CommonProxy {
 
@@ -20,7 +21,10 @@ public class ClientProxy extends CommonProxy {
 	@Override
 	public Object getClientGuiElement(int id, EntityPlayer player, World world, int x, int y, int z) {
 		if(id == 0) {
-			return new GuiAdvancedJukebox(new ContainerAdvancedJukebox());
+			TileEntityAdvancedJukebox tile = (TileEntityAdvancedJukebox) world.getBlockTileEntity(x, y, z);
+			if(tile != null) {
+				return new GuiAdvancedJukebox(new ContainerAdvancedJukebox(tile, player.inventory, world, x, y, z));
+			}
 		}
 		return null;
 	}

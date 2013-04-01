@@ -7,7 +7,6 @@ import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemRecord;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
@@ -15,9 +14,8 @@ import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import elcon.mods.soundcraft.SoundCraft;
 import elcon.mods.soundcraft.SoundCraftConfig;
-import elcon.mods.soundcraft.sounds.Sound;
-import elcon.mods.soundcraft.sounds.SoundDisc;
 import elcon.mods.soundcraft.tileentities.TileEntityAdvancedJukebox;
 
 public class BlockAdvancedJukebox extends BlockContainer {
@@ -33,8 +31,20 @@ public class BlockAdvancedJukebox extends BlockContainer {
 		return i == 1;
 	}
 
-	public boolean onBlockActivated(World world, int par2, int par3, int par4, EntityPlayer entityPlayer, int par6, float par7, float par8, float par9) {
-		if(world.getBlockMetadata(par2, par3, par4) == 0) {
+	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer entityPlayer, int par6, float par7, float par8, float par9) {
+		if(!world.isRemote) {
+			TileEntityAdvancedJukebox tile = (TileEntityAdvancedJukebox) world.getBlockTileEntity(x, y, z);
+			if(tile == null) {
+				tile = new TileEntityAdvancedJukebox();
+				world.setBlockTileEntity(x, y, z, tile);
+			}			
+			entityPlayer.openGui(SoundCraft.instance, 0, world, x, y, z);
+			return true;
+		}
+		return false;
+		
+		
+		/*if(world.getBlockMetadata(par2, par3, par4) == 0) {
 			if(entityPlayer.getHeldItem() != null && entityPlayer.getHeldItem().getItem() instanceof ItemRecord) {
 				insertRecord(world, par2, par3, par4, entityPlayer.getHeldItem());
 				
@@ -64,7 +74,7 @@ public class BlockAdvancedJukebox extends BlockContainer {
 			te.sendSound(new SoundDisc("stop", 0, 1.0F, 1.0F));
 			
 			return true;
-		}
+		}*/
 	}
 
 	public void insertRecord(World world, int par2, int par3, int par4, ItemStack par5ItemStack) {
