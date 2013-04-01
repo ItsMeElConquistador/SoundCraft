@@ -48,15 +48,11 @@ public class SoundCraftPacketHandler implements IPacketHandler {
 		if(type == 0) {
 			Minecraft.getMinecraft().theWorld.playSound(x, y, z, name, volume, pitch, false);
 		} else if(type == 1) {
-			System.out.println("received disc: " + name);
 			if(name.equalsIgnoreCase("stop")) {
-				System.out.println("stopping disc");
 				int discID = dat.readInt();				
 				Minecraft.getMinecraft().sndManager.playStreaming((String) null, (float)x, (float)y, (float)z);
 			} else {
-				System.out.println("received disc: " + name);
 				int discID = dat.readInt();
-				
 				Minecraft.getMinecraft().sndManager.playStreaming(name, (float)x, (float)y, (float)z);
 			}
 		} else if(type == 2) {

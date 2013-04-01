@@ -55,7 +55,7 @@ public class BlockAdvancedJukebox extends BlockContainer {
 				te = new TileEntityAdvancedJukebox();
 				world.setBlockTileEntity(par2, par3, par4, te);
 			}
-			te.sendSound(new Sound("stop", 1.0F, 1.0F));
+			te.sendSound(new SoundDisc("stop", 0, 1.0F, 1.0F));
 			
 			return true;
 		}
