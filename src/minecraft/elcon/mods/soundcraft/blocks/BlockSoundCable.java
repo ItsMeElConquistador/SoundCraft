@@ -1,5 +1,7 @@
 package elcon.mods.soundcraft.blocks;
 
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
 import java.util.List;
 
 import net.minecraft.block.BlockContainer;
@@ -9,6 +11,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemDye;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.Icon;
@@ -39,7 +42,10 @@ public class BlockSoundCable extends BlockContainer {
 			}
 			te.color = player.getHeldItem().getItemDamage();
 			player.getHeldItem().stackSize--;
-			world.markBlockForUpdate(x, y, z);
+			
+			updateCableConnections(world, x, y, z);
+			
+			world.markBlockForRenderUpdate(x, y, z);
 		}
 		return false;
 	}
@@ -113,11 +119,10 @@ public class BlockSoundCable extends BlockContainer {
 	
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void getSubBlocks(int i, CreativeTabs creativeTabs, List list) {
+	public void getSubBlocks(int i, CreativeTabs creativeTabs, List list) {				
 		for(SoundCableType type : SoundCableType.soundCables) {
 			if(type != null) {
-				System.out.println("added: " + type.id);
-				list.add(new ItemStack(blockID, 1, type.id));
+				list.add(new ItemStack(i, 1, type.id));
 			}
 		}
 	}
@@ -213,22 +218,16 @@ public class BlockSoundCable extends BlockContainer {
 			
 			world.markBlockForUpdate(x2, y2, z2);
 		}
-		TileEntity t1 = world.getBlockTileEntity(x1, y1, z1);
-		TileEntity t2 = world.getBlockTileEntity(x2, y2, z2);
-		TileEntitySoundConductor obj1 = null;
-		TileEntitySoundConductor obj2 = null;
-		if(t1 instanceof TileEntitySoundConductor) {
-			obj1 = (TileEntitySoundConductor) t1;
-		}
-		if(t2 instanceof TileEntitySoundConductor) {
-			obj2 = (TileEntitySoundConductor) t2;
-		}
+		TileEntitySoundObject obj1 = (TileEntitySoundObject) world.getBlockTileEntity(x1, y1, z1);
+		TileEntitySoundObject obj2 = (TileEntitySoundObject) world.getBlockTileEntity(x2, y2, z2);
 		if(obj1 != null) {
 			obj1.neighbors[direction1] = obj2;
 		}
 		if(obj2 != null) {
 			obj2.neighbors[direction2] = obj1;
 		}
+		world.markBlockForRenderUpdate(x1, y1, z1);
+		world.markBlockForRenderUpdate(x2, y2, z2);
 	}
 	
 	public void unconnectCable(World world, int x1, int y1, int z1, int x2, int y2, int z2, int direction1, int direction2) {
@@ -256,22 +255,16 @@ public class BlockSoundCable extends BlockContainer {
 			
 			world.markBlockForUpdate(x2, y2, z2);
 		}
-		TileEntity t1 = world.getBlockTileEntity(x1, y1, z1);
-		TileEntity t2 = world.getBlockTileEntity(x2, y2, z2);
-		TileEntitySoundConductor obj1 = null;
-		TileEntitySoundConductor obj2 = null;
-		if(t1 instanceof TileEntitySoundConductor) {
-			obj1 = (TileEntitySoundConductor) t1;
-		}
-		if(t2 instanceof TileEntitySoundConductor) {
-			obj2 = (TileEntitySoundConductor) t2;
-		}
+		TileEntitySoundObject obj1 = (TileEntitySoundObject) world.getBlockTileEntity(x1, y1, z1);
+		TileEntitySoundObject obj2 = (TileEntitySoundObject) world.getBlockTileEntity(x2, y2, z2);
 		if(obj1 != null) {
 			obj1.neighbors[direction1] = null;
 		}
 		if(obj2 != null) {
 			obj2.neighbors[direction2] = null;
 		}
+		world.markBlockForRenderUpdate(x1, y1, z1);
+		world.markBlockForRenderUpdate(x2, y2, z2);
 	}
 	
 	public boolean canConnectToCable(World world, int x1, int y1, int z1, int x2, int y2, int z2) {

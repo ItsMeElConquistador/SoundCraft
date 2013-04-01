@@ -11,6 +11,11 @@ public class TileEntitySpeaker extends TileEntitySoundAcceptor {
 
 	@Override
 	public void receiveSound(Sound sound) {
-		worldObj.playSound(xCoord, yCoord, zCoord, sound.name, 1.0F, 1.0F, false);
+		System.out.println("received sound: " + sound.name);
+		if(sound.name.equalsIgnoreCase("stop")) {
+			
+		} else {
+			worldObj.playSound(xCoord, yCoord, zCoord, sound.name, 1.0F, 1.0F, false);
+		}
 	}
 }

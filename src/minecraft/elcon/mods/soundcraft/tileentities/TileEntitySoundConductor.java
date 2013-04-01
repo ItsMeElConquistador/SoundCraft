@@ -4,12 +4,15 @@ import elcon.mods.soundcraft.Sound;
 
 public abstract class TileEntitySoundConductor extends TileEntitySoundObject {
 	
-	public TileEntitySoundConductor[] neighbors = new TileEntitySoundConductor[6];
-	
-	public void conductSound(int side, Sound s) {
+	public void conductSound(int side, Sound sound) {
+		System.out.println("conducting sound at: " + xCoord + "," + yCoord + "," + zCoord);
 		for(int i = 0; i < 6; i++) {
 			if(i != side && neighbors[i] != null ) {
-				neighbors[i].conductSound(getOppositeSide(i), s);
+				if(neighbors[i] instanceof TileEntitySoundConductor) {
+					((TileEntitySoundConductor) neighbors[i]).conductSound(getOppositeSide(i), sound);
+				} else if(neighbors[i] instanceof TileEntitySoundAcceptor) {
+					((TileEntitySoundAcceptor) neighbors[i]).receiveSound(sound);
+				}
 			}
 		}
 	}

@@ -5,6 +5,8 @@ import net.minecraft.tileentity.TileEntity;
 
 public class TileEntitySoundObject extends TileEntity {
 
+	public TileEntitySoundObject[] neighbors = new TileEntitySoundObject[6];
+	
 	public int group;
 	public int node;
 	

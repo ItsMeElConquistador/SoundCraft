@@ -24,7 +24,7 @@ import elcon.mods.soundcraft.tileentities.TileEntitySoundCable;
 import elcon.mods.soundcraft.tileentities.TileEntitySpeaker;
 
 @Mod(modid = "SoundCraft", name = "SoundCraft", version = "1.0.0")
-@NetworkMod(clientSideRequired = true, serverSideRequired = false, packetHandler = SoundCraftPacketHandler.class, channels = {"SCCable"})
+@NetworkMod(clientSideRequired = true, serverSideRequired = false, packetHandler = SoundCraftPacketHandler.class, channels = {"SoundCraft", "SCCable"})
 public class SoundCraft {
 
 	@Instance("SoundCraft")

@@ -39,4 +39,12 @@ public class SoundCraftPacketHandler implements IPacketHandler {
 		
 		Minecraft.getMinecraft().theWorld.setBlockTileEntity(x, y, z, te);
 	}
+	
+	public void handleTileEntityUpdate(ByteArrayDataInput dat) {
+		int x = dat.readInt();
+		int y = dat.readInt();
+		int z = dat.readInt();
+		
+		Minecraft.getMinecraft().theWorld.markBlockForRenderUpdate(x, y, z);
+	}
 }

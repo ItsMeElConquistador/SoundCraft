@@ -15,6 +15,7 @@ import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import elcon.mods.soundcraft.Sound;
 import elcon.mods.soundcraft.SoundCraftConfig;
 import elcon.mods.soundcraft.tileentities.TileEntityAdvancedJukebox;
 
@@ -29,7 +30,7 @@ public class BlockAdvancedJukebox extends BlockContainer {
 
 	public boolean onBlockActivated(World world, int par2, int par3, int par4, EntityPlayer entityPlayer, int par6, float par7, float par8, float par9) {
 		if(world.getBlockMetadata(par2, par3, par4) == 0) {
-			if(entityPlayer.getHeldItem().getItem() instanceof ItemRecord) {
+			if(entityPlayer.getHeldItem() != null && entityPlayer.getHeldItem().getItem() instanceof ItemRecord) {
 				insertRecord(world, par2, par3, par4, entityPlayer.getHeldItem());
 				
 				String recordName = ((ItemRecord) entityPlayer.getHeldItem().getItem()).recordName;
@@ -41,11 +42,23 @@ public class BlockAdvancedJukebox extends BlockContainer {
 					te = new TileEntityAdvancedJukebox();
 					world.setBlockTileEntity(par2, par3, par4, te);
 				}
+				
+				te.sendSound(new Sound(recordName));
+				
 				return true;
 			}			
 			return false;
 		} else {
 			ejectRecord(world, par2, par3, par4);
+			
+			TileEntityAdvancedJukebox te = (TileEntityAdvancedJukebox) world.getBlockTileEntity(par2, par3, par4);
+			if(te == null) {
+				te = new TileEntityAdvancedJukebox();
+				world.setBlockTileEntity(par2, par3, par4, te);
+			}
+			
+			te.sendSound(new Sound("stop"));
+			
 			return true;
 		}
 	}
