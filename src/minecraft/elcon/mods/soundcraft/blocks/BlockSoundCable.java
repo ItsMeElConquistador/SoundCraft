@@ -11,6 +11,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemDye;
+import net.minecraft.item.ItemRedstone;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.tileentity.TileEntity;
@@ -38,20 +39,69 @@ public class BlockSoundCable extends BlockContainer {
 	}
 	
 	@Override
+    public int isProvidingWeakPower(IBlockAccess blockAccess, int x, int y, int z, int par5) {
+        TileEntitySoundCable tile = (TileEntitySoundCable) blockAccess.getBlockTileEntity(x, y, z);
+        if(tile != null) {
+        	if(tile.isDetector && tile.emitRedstone) {
+        		return 15;
+        	}
+        }
+        return 0;
+    }
+    
+    @Override
+    public int isProvidingStrongPower(IBlockAccess blockAccess, int x, int y, int z, int par5) {
+    	TileEntitySoundCable tile = (TileEntitySoundCable) blockAccess.getBlockTileEntity(x, y, z);
+        if(tile != null) {
+        	if(tile.isDetector && tile.emitRedstone) {
+        		return 15;
+        	}
+        }
+        return 0;
+    	/*int i1 = blockAccess.getBlockMetadata(x, y, z);
+
+        if ((i1 & 8) == 0)
+        {
+            return 0;
+        }
+        else
+        {
+            int j1 = i1 & 7;
+            return j1 == 0 && par5 == 0 ? 15 : (j1 == 7 && par5 == 0 ? 15 : (j1 == 6 && par5 == 1 ? 15 : (j1 == 5 && par5 == 1 ? 15 : (j1 == 4 && par5 == 2 ? 15 : (j1 == 3 && par5 == 3 ? 15 : (j1 == 2 && par5 == 4 ? 15 : (j1 == 1 && par5 == 5 ? 15 : 0)))))));
+        }*/
+    }
+
+    @Override
+    public boolean canProvidePower() {
+        return true;
+    }
+	
+	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int par6, float xpos, float ypos, float zpos) {
-		if(player.getHeldItem() != null && player.getHeldItem().getItem() instanceof ItemDye) {
-			TileEntitySoundCable te = (TileEntitySoundCable) world.getBlockTileEntity(x, y, z);
-			if(te == null) {
-				te = new TileEntitySoundCable();
-				world.setBlockTileEntity(x, y, z, te);
-			}
-			te.color = player.getHeldItem().getItemDamage();
-			player.getHeldItem().stackSize--;
-			
-			updateCableConnections(world, x, y, z);
-			
-			world.markBlockForRenderUpdate(x, y, z);
+		if(player.getHeldItem() != null) {
+			if(player.getHeldItem().getItem() instanceof ItemDye) {
+				TileEntitySoundCable te = (TileEntitySoundCable) world.getBlockTileEntity(x, y, z);
+				if(te == null) {
+					te = new TileEntitySoundCable();
+					world.setBlockTileEntity(x, y, z, te);
+				}
+				te.color = player.getHeldItem().getItemDamage();
+				player.getHeldItem().stackSize--;
+				
+				updateCableConnections(world, x, y, z);
+			}/* else if(player.getHeldItem().getItem() instanceof ItemRedstone) {
+				TileEntitySoundCable te = (TileEntitySoundCable) world.getBlockTileEntity(x, y, z);
+				if(te == null) {
+					te = new TileEntitySoundCable();
+					world.setBlockTileEntity(x, y, z, te);
+				}
+				te.isDetector = true;
+				System.out.println("create detector");
+				world.markBlockForUpdate(x, y, z);
+				player.getHeldItem().stackSize--;
+			}*/
 		}
+		world.markBlockForRenderUpdate(x, y, z);
 		return false;
 	}
 	
@@ -233,6 +283,9 @@ public class BlockSoundCable extends BlockContainer {
 		}
 		world.markBlockForRenderUpdate(x1, y1, z1);
 		world.markBlockForRenderUpdate(x2, y2, z2);
+		
+		sendTileEntityUpdate(world, x1, y1, z1);
+		sendTileEntityUpdate(world, x2, y2, z2);
 	}
 	
 	public void unconnectCable(World world, int x1, int y1, int z1, int x2, int y2, int z2, int direction1, int direction2) {
@@ -270,6 +323,9 @@ public class BlockSoundCable extends BlockContainer {
 		}
 		world.markBlockForRenderUpdate(x1, y1, z1);
 		world.markBlockForRenderUpdate(x2, y2, z2);
+		
+		sendTileEntityUpdate(world, x1, y1, z1);
+		sendTileEntityUpdate(world, x2, y2, z2);
 	}
 	
 	public boolean canConnectToCable(World world, int x1, int y1, int z1, int x2, int y2, int z2, int direction1, int direction2) {
@@ -390,7 +446,6 @@ public class BlockSoundCable extends BlockContainer {
 		if(!world.isRemote) {
 			updateCableConnections(world, x, y, z);
 			world.markBlockForRenderUpdate(x, y, z);
-			sendTileEntityUpdate(world, x, y, z);
 		}
 	}
 	
@@ -399,7 +454,6 @@ public class BlockSoundCable extends BlockContainer {
 		if(!world.isRemote) {
 			updateCableConnections(world, x, y, z);
 			world.markBlockForRenderUpdate(x, y, z);
-			sendTileEntityUpdate(world, x, y, z);
 		}
 	}
 
@@ -408,7 +462,6 @@ public class BlockSoundCable extends BlockContainer {
 		if(!world.isRemote) {
 			updateCableConnections(world, x, y, z);
 			world.markBlockForRenderUpdate(x, y, z);
-			sendTileEntityUpdate(world, x, y, z);
 		}
 	}
 	
@@ -417,7 +470,6 @@ public class BlockSoundCable extends BlockContainer {
 		if(!world.isRemote) {
 			updateCableConnections(world, x, y, z);
 			world.markBlockForRenderUpdate(x, y, z);
-			sendTileEntityUpdate(world, x, y, z);
 		}
 	}
 }

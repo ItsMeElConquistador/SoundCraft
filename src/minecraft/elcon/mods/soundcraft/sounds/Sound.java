@@ -7,6 +7,8 @@ public class Sound {
 	public float volume = 1.0F;
 	public float pitch = 1.0F;
 	
+	public int blocksTraveled = 0;
+	
 	public Sound(String n, float v, float p) {
 		this(0, n, v, p);
 	}

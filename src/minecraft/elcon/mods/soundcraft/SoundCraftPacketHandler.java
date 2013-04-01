@@ -115,9 +115,7 @@ public class SoundCraftPacketHandler implements IPacketHandler {
 		int y = dat.readInt();
 		int z = dat.readInt();
 		
-		System.out.println("received tile entity update: " + x + "," + y + "," + z);
-		
-		Minecraft.getMinecraft().theWorld.markBlockForRenderUpdate(x, y, z);
+		Minecraft.getMinecraft().theWorld.markBlockForUpdate(x, y, z);
 	}
 	
 	public static void sendTileEntityUpdate(EntityPlayerMP player, int x, int y, int z) {

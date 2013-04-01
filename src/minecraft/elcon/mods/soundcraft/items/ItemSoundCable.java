@@ -3,18 +3,24 @@ package elcon.mods.soundcraft.items;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlockWithMetadata;
+import net.minecraft.item.ItemMultiTextureTile;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
 import net.minecraft.util.StatCollector;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import elcon.mods.soundcraft.SoundCableType;
+import elcon.mods.soundcraft.SoundCraftConfig;
 
 public class ItemSoundCable extends ItemBlockWithMetadata {
 
 	public ItemSoundCable(int i, Block block) {
 		super(i, block);
 	}
+	
+	public Icon getIconFromDamage(int i) {
+        return Block.blocksList[SoundCraftConfig.soundCableID].getBlockTextureFromSideAndMetadata(2, i);
+    }
 	
 	@Override
 	public String getLocalizedName(ItemStack stack) {

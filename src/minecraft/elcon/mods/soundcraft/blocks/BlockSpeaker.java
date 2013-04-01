@@ -47,12 +47,6 @@ public class BlockSpeaker extends BlockContainer {
 		}
 		return i == 3 ? true : false;
 	}
-	
-	@Override
-	public boolean onBlockActivated(World world, int par2, int par3, int par4, EntityPlayer player, int par6, float par7, float par8, float par9) {
-		player.sendChatToPlayer("metadata: " + Integer.toString(world.getBlockMetadata(par2, par3, par4)));
-		return true;
-	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
