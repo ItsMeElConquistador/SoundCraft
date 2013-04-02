@@ -46,9 +46,13 @@ public class SoundCraft {
 	public static Block speaker;
 	public static Block advancedJukebox;
 	
-	public static Item soundCableItem;
 	public static Item circuit;
 	public static Item speakerItem;
+	public static Item soundCableCopper;
+	public static Item soundCableTin;
+	public static Item soundCableSilver;
+	public static Item soundCableIron;
+	public static Item soundCableGold;
 	
 	@PreInit
 	public void preInit(FMLPreInitializationEvent event) {
@@ -68,9 +72,13 @@ public class SoundCraft {
 		advancedJukebox = new BlockAdvancedJukebox(SoundCraftConfig.advancedJukeboxID).setStepSound(Block.soundMetalFootstep).setHardness(5.0F).setResistance(10.0F).setCreativeTab(tabSoundCraft).setUnlocalizedName("advancedJukebox");
 		
 		//init items
-		soundCableItem = new ItemSoundCable(SoundCraftConfig.soundCableID - 256, soundCable);
-		circuit = new ItemSoundCraft(SoundCraftConfig.circuitID, "circuit").setUnlocalizedName("circuit");
-		speakerItem = new ItemSoundCraft(SoundCraftConfig.speakerItemID, "speaker").setUnlocalizedName("speaker");
+		circuit = new ItemSoundCraft(SoundCraftConfig.circuitID, "circuit").setCreativeTab(tabSoundCraft).setUnlocalizedName("circuit");
+		speakerItem = new ItemSoundCraft(SoundCraftConfig.speakerItemID, "speaker").setCreativeTab(tabSoundCraft).setUnlocalizedName("speaker");
+		soundCableCopper = new ItemSoundCable(SoundCraftConfig.soundCableCopperID, 0).setCreativeTab(tabSoundCraft).setUnlocalizedName("soundCableCopper");
+		soundCableTin = new ItemSoundCable(SoundCraftConfig.soundCableTinID, 1).setCreativeTab(tabSoundCraft).setUnlocalizedName("soundCableTin");
+		soundCableSilver = new ItemSoundCable(SoundCraftConfig.soundCableSilverID, 2).setCreativeTab(tabSoundCraft).setUnlocalizedName("soundCableSilver");
+		soundCableIron = new ItemSoundCable(SoundCraftConfig.soundCableIronID, 3).setCreativeTab(tabSoundCraft).setUnlocalizedName("soundCableIron");
+		soundCableGold = new ItemSoundCable(SoundCraftConfig.soundCableGoldID, 4).setCreativeTab(tabSoundCraft).setUnlocalizedName("soundCableGold");
 		
 		//register blocks
 		GameRegistry.registerBlock(soundCable, "SoundCraft_soundCable");
@@ -88,9 +96,13 @@ public class SoundCraft {
 		LanguageRegistry.addName(advancedJukebox, "Advanced Jukebox");
 		
 		//add item names
-		LanguageRegistry.addName(soundCableItem, "Sound Cable");
 		LanguageRegistry.addName(speakerItem, "Speaker");
 		LanguageRegistry.addName(circuit, "Sound Circiut");
+		LanguageRegistry.addName(soundCableCopper, "Copper Sound Cable");
+		LanguageRegistry.addName(soundCableTin, "Tin Sound Cable");
+		LanguageRegistry.addName(soundCableSilver, "Silver Sound Cable");
+		LanguageRegistry.addName(soundCableIron, "Iron Sound Cable");
+		LanguageRegistry.addName(soundCableGold, "Gold Sound Cable");
 		
 		//add localizations
 		LanguageRegistry.instance().addStringLocalization("itemGroup.SoundCraft", "SoundCraft");
@@ -104,6 +116,8 @@ public class SoundCraft {
 	
 	@PostInit
 	public void postInit(FMLPostInitializationEvent event) {
+		System.out.println(Item.itemsList[SoundCraftConfig.soundCableIronID + 256].getCreativeTab());
+		
 		GameRegistry.addRecipe(new ItemStack(circuit), 
 			" i ", "rgr", " i ", 'i', Item.ingotIron, 'r', Item.redstone, 'g', Item.ingotGold 
 		);
@@ -111,29 +125,33 @@ public class SoundCraft {
 			" i ", "ici", " i ", 'i', Item.ingotIron, 'c', circuit
 		);
 		GameRegistry.addRecipe(new ItemStack(speaker),
-			"isi", "aca", "iri", 'i', Item.ingotIron, 'c', circuit, 'a', soundCableItem, 'r', Item.redstone, 's', speakerItem
+			"isi", "aca", "iri", 'i', Item.ingotIron, 'c', circuit, 'a', soundCableCopper, 'r', Item.redstone, 's', speakerItem
 		);
 		GameRegistry.addRecipe(new ItemStack(advancedJukebox),
-			"iji", "aca", "iri", 'i', Item.ingotIron, 'c', circuit, 'a', soundCableItem, 'r', Item.redstone, 'j', Block.jukebox
+			"iji", "aca", "iri", 'i', Item.ingotIron, 'c', circuit, 'a', soundCableCopper, 'r', Item.redstone, 'j', Block.jukebox
 		);
-		/*GameRegistry.addRecipe(new ItemStack(soundCableItem, 1, 0),
-			"www", "iii", "ww", 'i', "ingotCopper", 'w', Block.cloth
+		/*GameRegistry.addRecipe(new ItemStack(soundCableCopper, 6, 0),
+			"www", "ccc", "www", 'c', "ingotCopper", 'w', Block.cloth
 		);*/
-		/*GameRegistry.addRecipe(new ItemStack(soundCableItem, 1, 1),
-			"www", "iii", "ww", 'i', "ingotTin", 'w', Block.cloth
+		/*GameRegistry.addRecipe(new ItemStack(soundCableTin, 6, 1),
+			"www", "ttt", "www", 't', "ingotTin", 'w', Block.cloth
 		);*/
-		/*GameRegistry.addRecipe(new ItemStack(soundCableItem, 1, 2),
-			"www", "iii", "ww", 'i', "ingotSilver", 'w', Block.cloth
+		/*GameRegistry.addRecipe(new ItemStack(soundCableSilver, 6, 2),
+			"www", "sss", "www", 's', "ingotSilver", 'w', Block.cloth
 		);*/
-		GameRegistry.addRecipe(new ItemStack(soundCable, 1, 0),
-			"www", "iii", "ww", 'i', Item.ingotIron, 'w', Block.cloth
+		GameRegistry.addRecipe(new ItemStack(soundCableIron, 6, 3),
+			"www", "iii", "www", 'i', Item.ingotIron, 'w', Block.cloth
 		);
-		GameRegistry.addRecipe(new ItemStack(soundCable, 1, 4),
-			"www", "iii", "ww", 'i', Item.ingotGold, 'w', Block.cloth
-		);
+		GameRegistry.addRecipe(new ItemStack(soundCableGold, 6, 4),
+			"www", "ggg", "www", 'g', Item.ingotGold, 'w', Block.cloth
+		);		
 		
-		
-		
-		//GameRegistry.addRecipe();
+		for(int i = 0; i < 16; i++) {
+			GameRegistry.addShapelessRecipe(new ItemStack(soundCableCopper, 1, i), new ItemStack(Item.dyePowder, 1, i), new ItemStack(soundCableCopper));
+			GameRegistry.addShapelessRecipe(new ItemStack(soundCableTin, 1, i), new ItemStack(Item.dyePowder, 1, i), new ItemStack(soundCableTin));
+			GameRegistry.addShapelessRecipe(new ItemStack(soundCableSilver, 1, i), new ItemStack(Item.dyePowder, 1, i), new ItemStack(soundCableSilver));
+			GameRegistry.addShapelessRecipe(new ItemStack(soundCableIron, 1, i), new ItemStack(Item.dyePowder, 1, i), new ItemStack(soundCableIron));
+			GameRegistry.addShapelessRecipe(new ItemStack(soundCableGold, 1, i), new ItemStack(Item.dyePowder, 1, i), new ItemStack(soundCableGold));
+		}
 	}
 }

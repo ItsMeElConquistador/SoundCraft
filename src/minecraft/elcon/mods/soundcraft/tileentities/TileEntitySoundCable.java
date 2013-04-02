@@ -20,6 +20,7 @@ public class TileEntitySoundCable extends TileEntitySoundConductor {
 	
 	@Override
 	public void updateEntity() {
+		super.updateEntity();
 		if(isDetector && emitRedstone) {
 			System.out.println("tick: " + emitTicks);
 			emitTicks--;

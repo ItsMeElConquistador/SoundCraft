@@ -15,6 +15,11 @@ public class SoundCraftConfig {
 
 	public static int circuitID = 28500;
 	public static int speakerItemID = 28501;
+	public static int soundCableCopperID = 28502;
+	public static int soundCableTinID = 28503;
+	public static int soundCableSilverID = 28504;
+	public static int soundCableIronID = 28505;
+	public static int soundCableGoldID = 28506;
 	
 	public static void load(Configuration config) {
 		soundCableID = config.getBlock("soundCable", 1650).getInt();
@@ -25,6 +30,11 @@ public class SoundCraftConfig {
 		
 		circuitID = config.getItem("circuit", 28500).getInt();
 		speakerItemID = config.getItem("speaker", 28501).getInt();
+		soundCableCopperID = config.getItem("soundCableCopper", 28502).getInt();
+		soundCableTinID = config.getItem("soundCableTin", 28503).getInt();
+		soundCableSilverID = config.getItem("soundCableSilver", 28504).getInt();
+		soundCableIronID = config.getItem("soundCableIron", 28505).getInt();
+		soundCableGoldID = config.getItem("soundCableGold", 28506).getInt();
 		
 		setBlockConnectsToCable(soundCableID, true);
 		setBlockConnectsToCable(speakerID, true);

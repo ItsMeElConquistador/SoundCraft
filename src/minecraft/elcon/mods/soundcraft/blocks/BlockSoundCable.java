@@ -1,7 +1,6 @@
 package elcon.mods.soundcraft.blocks;
 
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.block.BlockContainer;
@@ -11,9 +10,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemDye;
-import net.minecraft.item.ItemRedstone;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.Icon;
@@ -28,55 +25,84 @@ import elcon.mods.soundcraft.SoundCraft;
 import elcon.mods.soundcraft.SoundCraftConfig;
 import elcon.mods.soundcraft.SoundCraftPacketHandler;
 import elcon.mods.soundcraft.tileentities.TileEntitySoundCable;
-import elcon.mods.soundcraft.tileentities.TileEntitySoundConductor;
 import elcon.mods.soundcraft.tileentities.TileEntitySoundObject;
 
 public class BlockSoundCable extends BlockContainer {
 
 	public BlockSoundCable(int i) {
 		super(i, Material.cloth);
-		
 		setTickRandomly(true);
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void getSubBlocks(int par1, CreativeTabs par2CreativeTabs, List par3List) {
+		
 	}
 	
 	@Override
-    public int isProvidingWeakPower(IBlockAccess blockAccess, int x, int y, int z, int par5) {
-        /*TileEntitySoundCable tile = (TileEntitySoundCable) blockAccess.getBlockTileEntity(x, y, z);
-        if(tile != null) {
-        	if(tile.isDetector && tile.emitRedstone) {
-        		return 15;
-        	}
-        }*/
-        return 0;
-    }
-    
-    @Override
-    public int isProvidingStrongPower(IBlockAccess blockAccess, int x, int y, int z, int par5) {
-    	/*TileEntitySoundCable tile = (TileEntitySoundCable) blockAccess.getBlockTileEntity(x, y, z);
-        if(tile != null) {
-        	if(tile.isDetector && tile.emitRedstone) {
-        		return 15;
-        	}
-        }*/
-        return 0;
-    	/*int i1 = blockAccess.getBlockMetadata(x, y, z);
+	public int getDamageValue(World world, int x, int y, int z) {
+		TileEntitySoundCable tile = (TileEntitySoundCable) world.getBlockTileEntity(x, y, z);
+		if(tile == null) {
+			tile = new TileEntitySoundCable();
+			world.setBlockTileEntity(x, y, z, tile);
+		}
+		return tile.color;
+	}
 
-        if ((i1 & 8) == 0)
-        {
-            return 0;
-        }
-        else
-        {
-            int j1 = i1 & 7;
-            return j1 == 0 && par5 == 0 ? 15 : (j1 == 7 && par5 == 0 ? 15 : (j1 == 6 && par5 == 1 ? 15 : (j1 == 5 && par5 == 1 ? 15 : (j1 == 4 && par5 == 2 ? 15 : (j1 == 3 && par5 == 3 ? 15 : (j1 == 2 && par5 == 4 ? 15 : (j1 == 1 && par5 == 5 ? 15 : 0)))))));
-        }*/
-    }
+	public ArrayList<ItemStack> getBlockDropped(World world, int x, int y, int z, int metadata, int fortune) {
+		TileEntitySoundCable tile = (TileEntitySoundCable) world.getBlockTileEntity(x, y, z);
+		if(tile == null) {
+			tile = new TileEntitySoundCable();
+			world.setBlockTileEntity(x, y, z, tile);
+		}		
+		ArrayList<ItemStack> ret = new ArrayList<ItemStack>();
 
-    @Override
-    public boolean canProvidePower() {
-        return false;
-    }
+		int count = quantityDropped(metadata, fortune, world.rand);
+		for(int i = 0; i < count; i++) {
+			ret.add(new ItemStack(getIDForMeta(world.getBlockMetadata(x, y, z)), 1, tile.color));
+		}
+		return ret;
+	}
 	
+	public int getIDForMeta(int i) {
+		switch(i) {
+		case 0: return SoundCraftConfig.soundCableCopperID + 256;
+		case 1: return SoundCraftConfig.soundCableTinID + 256;
+		case 2: return SoundCraftConfig.soundCableSilverID + 256;
+		case 3: return SoundCraftConfig.soundCableIronID + 256;
+		case 4: return SoundCraftConfig.soundCableGoldID + 256;
+		}
+		return SoundCraftConfig.soundCableCopperID + 256;
+	}
+
+	@Override
+	public int isProvidingWeakPower(IBlockAccess blockAccess, int x, int y, int z, int par5) {
+		/*
+		 * TileEntitySoundCable tile = (TileEntitySoundCable) blockAccess.getBlockTileEntity(x, y, z); if(tile != null) { if(tile.isDetector && tile.emitRedstone) { return 15; } }
+		 */
+		return 0;
+	}
+
+	@Override
+	public int isProvidingStrongPower(IBlockAccess blockAccess, int x, int y, int z, int par5) {
+		/*
+		 * TileEntitySoundCable tile = (TileEntitySoundCable) blockAccess.getBlockTileEntity(x, y, z); if(tile != null) { if(tile.isDetector && tile.emitRedstone) { return 15; } }
+		 */
+		return 0;
+		/*
+		 * int i1 = blockAccess.getBlockMetadata(x, y, z);
+		 * 
+		 * if ((i1 & 8) == 0) { return 0; } else { int j1 = i1 & 7; return j1 == 0 && par5 == 0 ? 15 : (j1 == 7 && par5 == 0 ? 15 : (j1 == 6 && par5 == 1 ? 15 : (j1 == 5 && par5 == 1 ? 15 : (j1 == 4
+		 * && par5 == 2 ? 15 : (j1 == 3 && par5 == 3 ? 15 : (j1 == 2 && par5 == 4 ? 15 : (j1 == 1 && par5 == 5 ? 15 : 0))))))); }
+		 */
+	}
+
+	@Override
+	public boolean canProvidePower() {
+		return false;
+	}
+
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int par6, float xpos, float ypos, float zpos) {
 		if(player.getHeldItem() != null) {
@@ -88,26 +114,20 @@ public class BlockSoundCable extends BlockContainer {
 				}
 				te.color = player.getHeldItem().getItemDamage();
 				player.getHeldItem().stackSize--;
-				
+
 				updateCableConnections(world, x, y, z);
-			}/* else if(player.getHeldItem().getItem() instanceof ItemRedstone) {
-				TileEntitySoundCable te = (TileEntitySoundCable) world.getBlockTileEntity(x, y, z);
-				if(te == null) {
-					te = new TileEntitySoundCable();
-					world.setBlockTileEntity(x, y, z, te);
-				}
-				te.isDetector = true;
-				System.out.println("create detector");
-				world.markBlockForUpdate(x, y, z);
-				player.getHeldItem().stackSize--;
-			}*/
+			}/*
+			 * else if(player.getHeldItem().getItem() instanceof ItemRedstone) { TileEntitySoundCable te = (TileEntitySoundCable) world.getBlockTileEntity(x, y, z); if(te == null) { te = new
+			 * TileEntitySoundCable(); world.setBlockTileEntity(x, y, z, te); } te.isDetector = true; System.out.println("create detector"); world.markBlockForUpdate(x, y, z);
+			 * player.getHeldItem().stackSize--; }
+			 */
 		}
 		world.markBlockForRenderUpdate(x, y, z);
 		return false;
 	}
-	
-	public AxisAlignedBB getSelectedBoundingBoxFromPool(World world, int x, int y, int z){
-        TileEntitySoundCable te = (TileEntitySoundCable) world.getBlockTileEntity(x, y, z);
+
+	public AxisAlignedBB getSelectedBoundingBoxFromPool(World world, int x, int y, int z) {
+		TileEntitySoundCable te = (TileEntitySoundCable) world.getBlockTileEntity(x, y, z);
 		if(te == null) {
 			te = new TileEntitySoundCable();
 			world.setBlockTileEntity(x, y, z, te);
@@ -118,7 +138,7 @@ public class BlockSoundCable extends BlockContainer {
 		double maxX = 0.0625F * 10;
 		double maxY = 0.0625F * 10;
 		double maxZ = 0.0625F * 10;
-		
+
 		if(te.directions[0]) {
 			minX = 0.0;
 		}
@@ -138,8 +158,8 @@ public class BlockSoundCable extends BlockContainer {
 			maxZ = 1.0;
 		}
 		return AxisAlignedBB.getAABBPool().getAABB(x + minX, y + minY, z + minZ, x + maxX, y + maxY, z + maxZ);
-    }
-	
+	}
+
 	public void setBlockBoundsBasedOnState(IBlockAccess blockAccess, int x, int y, int z) {
 		TileEntitySoundCable te = (TileEntitySoundCable) blockAccess.getBlockTileEntity(x, y, z);
 		if(te == null) {
@@ -151,7 +171,7 @@ public class BlockSoundCable extends BlockContainer {
 		float maxX = 0.0625F * 10;
 		float maxY = 0.0625F * 10;
 		float maxZ = 0.0625F * 10;
-		
+
 		if(te.directions[0]) {
 			minX = 0.0F;
 		}
@@ -172,58 +192,48 @@ public class BlockSoundCable extends BlockContainer {
 		}
 		setBlockBounds(minX, minY, minZ, maxX, maxY, maxZ);
 	}
-	
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void getSubBlocks(int i, CreativeTabs creativeTabs, List list) {				
-		for(SoundCableType type : SoundCableType.soundCables) {
-			if(type != null) {
-				list.add(new ItemStack(i, 1, type.id));
-			}
-		}
-	}
 
 	@Override
 	public TileEntity createNewTileEntity(World world) {
 		return new TileEntitySoundCable();
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerIcons(IconRegister iconRegister) {
 		ClientProxy.crossIcon = iconRegister.registerIcon("soundcraft:cross");
 		SoundCableType.registerIcons(iconRegister);
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public Icon getBlockTexture(IBlockAccess blockAccess, int x, int y, int z, int i) {
 		return SoundCableType.soundCables[blockAccess.getBlockMetadata(x, y, z)].textures[((TileEntitySoundCable) blockAccess.getBlockTileEntity(x, y, z)).color];
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public Icon getBlockTextureFromSideAndMetadata(int i, int j) {
 		return SoundCableType.soundCables[j].textures[0];
 	}
-	
+
 	@Override
 	public boolean isOpaqueCube() {
 		return false;
 	}
-	
+
 	@Override
 	public boolean renderAsNormalBlock() {
 		return false;
 	}
-	
+
 	@Override
 	public int getRenderType() {
 		return SoundCraftConfig.soundCableRenderID;
 	}
-	
+
 	public void notifyCableNeighbors(World world, int x, int y, int z) {
-		if (world.getBlockId(x, y, z) == blockID) {
+		if(world.getBlockId(x, y, z) == blockID) {
 			world.notifyBlocksOfNeighborChange(x, y, z, blockID);
 			world.notifyBlocksOfNeighborChange(x - 1, y, z, blockID);
 			world.notifyBlocksOfNeighborChange(x + 1, y, z, blockID);
@@ -233,7 +243,7 @@ public class BlockSoundCable extends BlockContainer {
 			world.notifyBlocksOfNeighborChange(x, y + 1, z, blockID);
 		}
 	}
-	
+
 	private static boolean charToBoolean(char c) {
 		if(c == '0') {
 			return false;
@@ -242,14 +252,14 @@ public class BlockSoundCable extends BlockContainer {
 		}
 		return false;
 	}
-	
+
 	public boolean isCableEqual(int data1, int c1, int data2, int c2) {
 		if(data1 == data2 && c1 == c2) {
 			return true;
 		}
 		return false;
 	}
-	
+
 	public void connectCable(World world, int x1, int y1, int z1, int x2, int y2, int z2, int direction1, int direction2) {
 		int id1 = world.getBlockId(x1, y1, z1);
 		int id2 = world.getBlockId(x2, y2, z2);
@@ -261,7 +271,7 @@ public class BlockSoundCable extends BlockContainer {
 			}
 			te.directions[direction1] = true;
 			world.setBlockTileEntity(x1, y1, z1, te);
-			
+
 			world.markBlockForUpdate(x1, y1, z1);
 		}
 		if(id2 == blockID) {
@@ -272,7 +282,7 @@ public class BlockSoundCable extends BlockContainer {
 			}
 			te.directions[direction2] = true;
 			world.setBlockTileEntity(x2, y2, z2, te);
-			
+
 			world.markBlockForUpdate(x2, y2, z2);
 		}
 		TileEntitySoundObject obj1 = (TileEntitySoundObject) world.getBlockTileEntity(x1, y1, z1);
@@ -285,11 +295,11 @@ public class BlockSoundCable extends BlockContainer {
 		}
 		world.markBlockForRenderUpdate(x1, y1, z1);
 		world.markBlockForRenderUpdate(x2, y2, z2);
-		
+
 		sendTileEntityUpdate(world, x1, y1, z1);
 		sendTileEntityUpdate(world, x2, y2, z2);
 	}
-	
+
 	public void unconnectCable(World world, int x1, int y1, int z1, int x2, int y2, int z2, int direction1, int direction2) {
 		int id1 = world.getBlockId(x1, y1, z1);
 		int id2 = world.getBlockId(x2, y2, z2);
@@ -301,7 +311,7 @@ public class BlockSoundCable extends BlockContainer {
 			}
 			te.directions[direction1] = false;
 			world.setBlockTileEntity(x1, y1, z1, te);
-			
+
 			world.markBlockForUpdate(x1, y1, z1);
 		}
 		if(id2 == blockID) {
@@ -312,7 +322,7 @@ public class BlockSoundCable extends BlockContainer {
 			}
 			te.directions[direction2] = false;
 			world.setBlockTileEntity(x2, y2, z2, te);
-			
+
 			world.markBlockForUpdate(x2, y2, z2);
 		}
 		TileEntitySoundObject obj1 = (TileEntitySoundObject) world.getBlockTileEntity(x1, y1, z1);
@@ -325,11 +335,11 @@ public class BlockSoundCable extends BlockContainer {
 		}
 		world.markBlockForRenderUpdate(x1, y1, z1);
 		world.markBlockForRenderUpdate(x2, y2, z2);
-		
+
 		sendTileEntityUpdate(world, x1, y1, z1);
 		sendTileEntityUpdate(world, x2, y2, z2);
 	}
-	
+
 	public boolean canConnectToCable(World world, int x1, int y1, int z1, int x2, int y2, int z2, int direction1, int direction2) {
 		int id1 = world.getBlockId(x1, y1, z1);
 		int id2 = world.getBlockId(x2, y2, z2);
@@ -355,7 +365,7 @@ public class BlockSoundCable extends BlockContainer {
 					if(BlockSpeaker.isFront(directionToBlockSide(direction2), meta)) {
 						ret = false;
 					}
-				} 
+				}
 				if(id2 == SoundCraftConfig.speakerID) {
 					int meta = world.getBlockMetadata(x2, y2, z2);
 					if(BlockSpeaker.isFront(directionToBlockSide(direction1), meta)) {
@@ -366,7 +376,7 @@ public class BlockSoundCable extends BlockContainer {
 					if(BlockAdvancedJukebox.isTop(directionToBlockSide(direction2), 0)) {
 						ret = false;
 					}
-				} 
+				}
 				if(id2 == SoundCraftConfig.advancedJukeboxID) {
 					if(BlockAdvancedJukebox.isTop(directionToBlockSide(direction1), 0)) {
 						ret = false;
@@ -377,7 +387,7 @@ public class BlockSoundCable extends BlockContainer {
 		}
 		return false;
 	}
-	
+
 	public void updateCableConnections(World world, int x, int y, int z) {
 		int data = world.getBlockMetadata(x, y, z);
 		TileEntitySoundCable te = (TileEntitySoundCable) world.getBlockTileEntity(x, y, z);
@@ -386,7 +396,7 @@ public class BlockSoundCable extends BlockContainer {
 			world.setBlockTileEntity(x, y, z, te);
 		}
 		int color = te.color;
-		
+
 		if(canConnectToCable(world, x, y, z, x - 1, y, z, 0, 1)) {
 			connectCable(world, x, y, z, x - 1, y, z, 0, 1);
 		} else {
@@ -418,31 +428,37 @@ public class BlockSoundCable extends BlockContainer {
 			unconnectCable(world, x, y, z, x, y, z + 1, 5, 4);
 		}
 	}
-	
+
 	public int directionToBlockSide(int i) {
 		switch(i) {
-		case 0: return 5;
-		case 1: return 4;
-		case 2: return 1;
-		case 3: return 0;
-		case 4: return 3;
-		case 5: return 2;
+		case 0:
+			return 5;
+		case 1:
+			return 4;
+		case 2:
+			return 1;
+		case 3:
+			return 0;
+		case 4:
+			return 3;
+		case 5:
+			return 2;
 		}
 		return 0;
 	}
-	
+
 	public void sendTileEntityUpdate(World world, int x, int y, int z) {
 		if(SoundCraft.proxy.getMCServer().worldServerForDimension(world.provider.dimensionId) != null) {
-			for(Object o :SoundCraft.proxy.getMCServer().worldServerForDimension(world.provider.dimensionId).playerEntities) {
+			for(Object o : SoundCraft.proxy.getMCServer().worldServerForDimension(world.provider.dimensionId).playerEntities) {
 				EntityPlayerMP player = null;
 				if(o instanceof EntityPlayerMP) {
 					player = (EntityPlayerMP) o;
 					SoundCraftPacketHandler.sendTileEntityUpdate(player, x, y, z);
 				}
-			}	
+			}
 		}
 	}
-	
+
 	@Override
 	public void onBlockAdded(World world, int x, int y, int z) {
 		if(!world.isRemote) {
@@ -450,7 +466,7 @@ public class BlockSoundCable extends BlockContainer {
 			world.markBlockForRenderUpdate(x, y, z);
 		}
 	}
-	
+
 	@Override
 	public void onBlockDestroyedByExplosion(World world, int x, int y, int z, Explosion explosion) {
 		if(!world.isRemote) {
@@ -466,7 +482,7 @@ public class BlockSoundCable extends BlockContainer {
 			world.markBlockForRenderUpdate(x, y, z);
 		}
 	}
-	
+
 	@Override
 	public void onNeighborBlockChange(World world, int x, int y, int z, int par5) {
 		if(!world.isRemote) {
