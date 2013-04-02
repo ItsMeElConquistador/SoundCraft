@@ -21,7 +21,9 @@ Sound Cables
 		- Down
 	Colors:
 		One of the 16 Minecraft colors
-		
+	Upgrades:
+		- Detector
+	
 Speakers
 	ID:		1651
 	DATA: 	none
