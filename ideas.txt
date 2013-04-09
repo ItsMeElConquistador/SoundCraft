@@ -28,7 +28,7 @@ Speakers
 	ID:		1651
 	DATA: 	none
 	RENDER: normal
-Advanced
+Advanced Jukebox
 	ID:		1652
 	DATA: 	playing
 	RENDER: normal

@@ -17,6 +17,7 @@ public class TileEntitySoundObject extends TileEntity {
 	public boolean checkedNeighbors = false;
 	
 	public void check(int x, int y, int z, int direction) {
+		onUpdateNeighbors();
 		if(worldObj.blockHasTileEntity(x, y, z)) {
 			TileEntity tile = worldObj.getBlockTileEntity(x, y, z);
 			if(tile instanceof TileEntitySoundObject) {
@@ -38,6 +39,10 @@ public class TileEntitySoundObject extends TileEntity {
 				}
 				if(connect) {
 					neighbors[direction] = obj;
+					worldObj.markBlockForRenderUpdate(xCoord, yCoord, zCoord);
+				} else {
+					neighbors[direction] = null;
+					worldObj.markBlockForRenderUpdate(xCoord, yCoord, zCoord);
 				}
 			}
 		}
@@ -78,6 +83,10 @@ public class TileEntitySoundObject extends TileEntity {
 			check(xCoord, yCoord, zCoord + 1, 5);
 			checkedNeighbors = true;
 		}
+	}
+	
+	public void onUpdateNeighbors() {
+		
 	}
 	
 	@Override

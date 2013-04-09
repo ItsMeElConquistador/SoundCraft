@@ -15,8 +15,8 @@ import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import elcon.mods.soundcraft.SoundCraft;
 import elcon.mods.soundcraft.SoundCraftConfig;
-import elcon.mods.soundcraft.sounds.SoundDisc;
 import elcon.mods.soundcraft.tileentities.TileEntityAdvancedJukebox;
 
 public class BlockAdvancedJukebox extends BlockContainer {
@@ -27,96 +27,71 @@ public class BlockAdvancedJukebox extends BlockContainer {
 	public BlockAdvancedJukebox(int i) {
 		super(i, Material.iron);
 	}
-	
+
 	public static boolean isTop(int i, int j) {
 		return i == 1;
 	}
 
+	public void onPoweredBlockChange(World world, int x, int y, int z, boolean par5) {
+		TileEntityAdvancedJukebox tile = (TileEntityAdvancedJukebox) world.getBlockTileEntity(x, y, z);
+		if(tile == null) {
+			tile = new TileEntityAdvancedJukebox();
+			world.setBlockTileEntity(x, y, z, tile);
+		}
+		tile.play();
+	}
+
+	@Override
+	public void onNeighborBlockChange(World world, int x, int y, int z, int par5) {
+		boolean flag = world.isBlockIndirectlyGettingPowered(x, y, z);
+
+		if(flag || par5 > 0 && Block.blocksList[par5].canProvidePower()) {
+			onPoweredBlockChange(world, x, y, z, flag);
+		}
+	}
+
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer entityPlayer, int par6, float par7, float par8, float par9) {
-		/*if(!world.isRemote) {
+		if(entityPlayer.isSneaking()) {
+			if(!world.isRemote) {
+				TileEntityAdvancedJukebox tile = (TileEntityAdvancedJukebox) world.getBlockTileEntity(x, y, z);
+				if(tile == null) {
+					tile = new TileEntityAdvancedJukebox();
+					world.setBlockTileEntity(x, y, z, tile);
+				}
+				entityPlayer.openGui(SoundCraft.instance, 0, world, x, y, z);
+				return true;
+			}
+		}
+		if(entityPlayer.getHeldItem() != null && entityPlayer.getHeldItem().getItem() instanceof ItemRecord) {
 			TileEntityAdvancedJukebox tile = (TileEntityAdvancedJukebox) world.getBlockTileEntity(x, y, z);
 			if(tile == null) {
 				tile = new TileEntityAdvancedJukebox();
 				world.setBlockTileEntity(x, y, z, tile);
-			}			
-			entityPlayer.openGui(SoundCraft.instance, 0, world, x, y, z);
-			return true;
-		}
-		return false;*/
-		
-		if(world.getBlockMetadata(x, y, z) == 0) {
-			if(entityPlayer.getHeldItem() != null && entityPlayer.getHeldItem().getItem() instanceof ItemRecord) {
-				insertRecord(world, x, y, z, entityPlayer.getHeldItem());
-				
-				String recordName = ((ItemRecord) entityPlayer.getHeldItem().getItem()).recordName;
-				
-				TileEntityAdvancedJukebox te = (TileEntityAdvancedJukebox) world.getBlockTileEntity(x, y, z);
-				if(te == null) {
-					te = new TileEntityAdvancedJukebox();
-					world.setBlockTileEntity(x, y, z, te);
-				}
-				
-				te.sendSound(new SoundDisc(recordName, entityPlayer.getHeldItem().itemID, 1.0F, 1.0F));
-				
-				entityPlayer.getHeldItem().stackSize--;
-				
-				return true;
-			}			
-			return false;
-		} else {
-			ejectRecord(world, x, y, z);
-			
-			TileEntityAdvancedJukebox te = (TileEntityAdvancedJukebox) world.getBlockTileEntity(x, y, z);
-			if(te == null) {
-				te = new TileEntityAdvancedJukebox();
-				world.setBlockTileEntity(x, y, z, te);
 			}
-			te.sendSound(new SoundDisc("stop", 0, 1.0F, 1.0F));
-			
-			return true;
+			tile.stop();
+			tile.stacks[0] = new ItemStack(entityPlayer.getHeldItem().itemID, 1, 0);
+			entityPlayer.getHeldItem().stackSize--;
+			tile.play(0);
 		}
+
+		return false;
 	}
 
-	public void insertRecord(World world, int par2, int par3, int par4, ItemStack par5ItemStack) {
-		if(!world.isRemote) {
-			TileEntityAdvancedJukebox tileentityrecordplayer = (TileEntityAdvancedJukebox) world.getBlockTileEntity(par2, par3, par4);
-
-			if(tileentityrecordplayer != null) {
-				tileentityrecordplayer.setRecord(par5ItemStack.copy());
-				
-				world.setBlockMetadataWithNotify(par2, par3, par4, 1, 2);
+	public void breakBlock(World world, int x, int y, int z, int par5, int par6) {		
+		TileEntityAdvancedJukebox tile = (TileEntityAdvancedJukebox) world.getBlockTileEntity(x, y, z);
+		if(tile != null) {
+			for(int i = 0; i < 8; i++) {
+				float f = 0.7F;
+                double d0 = (double)(world.rand.nextFloat() * f) + (double)(1.0F - f) * 0.5D;
+                double d1 = (double)(world.rand.nextFloat() * f) + (double)(1.0F - f) * 0.2D + 0.6D;
+                double d2 = (double)(world.rand.nextFloat() * f) + (double)(1.0F - f) * 0.5D;
+                ItemStack itemstack1 = tile.stacks[i].copy();
+                EntityItem entityitem = new EntityItem(world, (double)x + d0, (double)y + d1, (double)z + d2, itemstack1);
+                entityitem.delayBeforeCanPickup = 10;
+                world.spawnEntityInWorld(entityitem);
 			}
 		}
-	}
-
-	public void ejectRecord(World par1World, int par2, int par3, int par4) {
-		if(!par1World.isRemote) {
-			TileEntityAdvancedJukebox tileentityrecordplayer = (TileEntityAdvancedJukebox) par1World.getBlockTileEntity(par2, par3, par4);
-
-			if(tileentityrecordplayer != null) {
-				ItemStack itemstack = tileentityrecordplayer.getRecord();
-
-				if(itemstack != null) {
-					//par1World.playAuxSFX(1005, par2, par3, par4, 0);
-					//par1World.playRecord((String) null, par2, par3, par4);
-					tileentityrecordplayer.setRecord((ItemStack) null);
-					par1World.setBlockMetadataWithNotify(par2, par3, par4, 0, 2);
-					float f = 0.7F;
-					double d0 = (double) (par1World.rand.nextFloat() * f) + (double) (1.0F - f) * 0.5D;
-					double d1 = (double) (par1World.rand.nextFloat() * f) + (double) (1.0F - f) * 0.2D + 0.6D;
-					double d2 = (double) (par1World.rand.nextFloat() * f) + (double) (1.0F - f) * 0.5D;
-					ItemStack itemstack1 = itemstack.copy();
-					EntityItem entityitem = new EntityItem(par1World, (double) par2 + d0, (double) par3 + d1, (double) par4 + d2, itemstack1);
-					entityitem.delayBeforeCanPickup = 10;
-					par1World.spawnEntityInWorld(entityitem);
-				}
-			}
-		}
-	}
-
-	public void breakBlock(World par1World, int par2, int par3, int par4, int par5, int par6) {
-		this.ejectRecord(par1World, par2, par3, par4);
-		super.breakBlock(par1World, par2, par3, par4, par5, par6);
+		super.breakBlock(world, x, y, z, par5, par6);
 	}
 
 	public void dropBlockAsItemWithChance(World par1World, int par2, int par3, int par4, int par5, float par6, int par7) {
@@ -129,10 +104,10 @@ public class BlockAdvancedJukebox extends BlockContainer {
 		return true;
 	}
 
-	public int getComparatorInputOverride(World world, int par2, int par3, int par4, int par5) {
+	/*public int getComparatorInputOverride(World world, int par2, int par3, int par4, int par5) {
 		ItemStack itemstack = ((TileEntityAdvancedJukebox) world.getBlockTileEntity(par2, par3, par4)).getRecord();
 		return itemstack == null ? 0 : itemstack.itemID + 1 - Item.record13.itemID;
-	}
+	}*/
 
 	@Override
 	@SideOnly(Side.CLIENT)
@@ -151,7 +126,7 @@ public class BlockAdvancedJukebox extends BlockContainer {
 	public TileEntity createNewTileEntity(World world) {
 		return new TileEntityAdvancedJukebox();
 	}
-	
+
 	public void updateConnections(World world, int x, int y, int z) {
 		if(world.getBlockId(x - 1, y, z) == SoundCraftConfig.soundCableID) {
 			((BlockSoundCable) Block.blocksList[SoundCraftConfig.soundCableID]).updateCableConnections(world, x - 1, y, z);
@@ -172,21 +147,21 @@ public class BlockAdvancedJukebox extends BlockContainer {
 			((BlockSoundCable) Block.blocksList[SoundCraftConfig.soundCableID]).updateCableConnections(world, x, y, z + 1);
 		}
 	}
-	
+
 	@Override
 	public void onBlockAdded(World world, int x, int y, int z) {
 		if(!world.isRemote) {
 			updateConnections(world, x, y, z);
 		}
 	}
-	
+
 	@Override
 	public void onBlockDestroyedByExplosion(World world, int x, int y, int z, Explosion explosion) {
 		if(!world.isRemote) {
 			updateConnections(world, x, y, z);
 		}
 	}
-	
+
 	@Override
 	public void onBlockDestroyedByPlayer(World world, int x, int y, int z, int par5) {
 		if(!world.isRemote) {

@@ -202,6 +202,7 @@ public class BlockSoundCable extends BlockContainer {
 	@SideOnly(Side.CLIENT)
 	public void registerIcons(IconRegister iconRegister) {
 		ClientProxy.crossIcon = iconRegister.registerIcon("soundcraft:cross");
+		ClientProxy.emptyIcon = iconRegister.registerIcon("soundcraft:empty");
 		SoundCableType.registerIcons(iconRegister);
 	}
 
@@ -288,10 +289,12 @@ public class BlockSoundCable extends BlockContainer {
 		TileEntitySoundObject obj1 = (TileEntitySoundObject) world.getBlockTileEntity(x1, y1, z1);
 		TileEntitySoundObject obj2 = (TileEntitySoundObject) world.getBlockTileEntity(x2, y2, z2);
 		if(obj1 != null) {
-			obj1.neighbors[direction1] = obj2;
+			obj1.updateEntity();
+			//obj1.neighbors[direction1] = obj2;
 		}
 		if(obj2 != null) {
-			obj2.neighbors[direction2] = obj1;
+			obj2.updateEntity();
+			//obj2.neighbors[direction2] = obj1;
 		}
 		world.markBlockForRenderUpdate(x1, y1, z1);
 		world.markBlockForRenderUpdate(x2, y2, z2);
@@ -328,11 +331,14 @@ public class BlockSoundCable extends BlockContainer {
 		TileEntitySoundObject obj1 = (TileEntitySoundObject) world.getBlockTileEntity(x1, y1, z1);
 		TileEntitySoundObject obj2 = (TileEntitySoundObject) world.getBlockTileEntity(x2, y2, z2);
 		if(obj1 != null) {
-			obj1.neighbors[direction1] = null;
+			obj1.updateEntity();
+			//obj1.neighbors[direction1] = null;
 		}
 		if(obj2 != null) {
-			obj2.neighbors[direction2] = null;
+			obj2.updateEntity();
+			//obj2.neighbors[direction2] = null;
 		}
+		
 		world.markBlockForRenderUpdate(x1, y1, z1);
 		world.markBlockForRenderUpdate(x2, y2, z2);
 

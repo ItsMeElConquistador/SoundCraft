@@ -7,6 +7,8 @@ public class SoundCraftConfig {
 
 	public static boolean[] blockConnectsToCable = new boolean[Block.blocksList.length];
 	
+	public static boolean debugMode = false;
+	
 	public static int soundCableID = 1650;
 	public static int speakerID = 1651;
 	public static int advancedJukeboxID = 1652;
@@ -22,6 +24,8 @@ public class SoundCraftConfig {
 	public static int soundCableGoldID = 28506;
 	
 	public static void load(Configuration config) {
+		debugMode = config.get("General", "debugMode", false).getBoolean(false);
+		
 		soundCableID = config.getBlock("soundCable", 1650).getInt();
 		speakerID = config.getBlock("speaker", 1651).getInt();
 		advancedJukeboxID = config.getBlock("advancedJukebox", 1652).getInt();

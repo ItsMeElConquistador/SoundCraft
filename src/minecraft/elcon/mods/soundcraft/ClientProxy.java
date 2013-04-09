@@ -1,5 +1,7 @@
 package elcon.mods.soundcraft;
 
+import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.client.renderer.texture.TextureStitched;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.Icon;
 import net.minecraft.world.World;
@@ -11,6 +13,7 @@ import elcon.mods.soundcraft.tileentities.TileEntityAdvancedJukebox;
 public class ClientProxy extends CommonProxy {
 
 	public static Icon crossIcon;
+	public static Icon emptyIcon;
 	
 	public SoundCraftBlockRenderingHandler blockRenderingHandler;
 	
@@ -26,7 +29,7 @@ public class ClientProxy extends CommonProxy {
 		if(id == 0) {
 			TileEntityAdvancedJukebox tile = (TileEntityAdvancedJukebox) world.getBlockTileEntity(x, y, z);
 			if(tile != null) {
-				return new GuiAdvancedJukebox(new ContainerAdvancedJukebox(tile, player.inventory, world, x, y, z));
+				return new GuiAdvancedJukebox(new ContainerAdvancedJukebox(tile, player.inventory, world, x, y, z), player, tile);
 			}
 		}
 		return null;

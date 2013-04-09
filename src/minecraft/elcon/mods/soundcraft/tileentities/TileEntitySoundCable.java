@@ -44,7 +44,7 @@ public class TileEntitySoundCable extends TileEntitySoundConductor {
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		DataOutputStream dos = new DataOutputStream(bos);
 		try {
-			dos.writeByte(50);
+			dos.writeByte(20);
 			dos.writeInt(xCoord);
 			dos.writeInt(yCoord);
 			dos.writeInt(zCoord);

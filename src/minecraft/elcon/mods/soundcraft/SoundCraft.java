@@ -3,9 +3,11 @@ package elcon.mods.soundcraft;
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemRecord;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.MinecraftForge;
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.Init;
 import cpw.mods.fml.common.Mod.Instance;
@@ -19,6 +21,7 @@ import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
+import cpw.mods.fml.relauncher.Side;
 import elcon.mods.soundcraft.blocks.BlockAdvancedJukebox;
 import elcon.mods.soundcraft.blocks.BlockSoundCable;
 import elcon.mods.soundcraft.blocks.BlockSpeaker;
@@ -29,7 +32,7 @@ import elcon.mods.soundcraft.tileentities.TileEntitySoundCable;
 import elcon.mods.soundcraft.tileentities.TileEntitySpeaker;
 
 @Mod(modid = "SoundCraft", name = "SoundCraft", version = "1.0.0")
-@NetworkMod(clientSideRequired = true, serverSideRequired = false, packetHandler = SoundCraftPacketHandler.class, channels = {"SoundCraft", "SCCable", "SCSound"})
+@NetworkMod(clientSideRequired = true, serverSideRequired = false, packetHandler = SoundCraftPacketHandler.class, channels = {"SoundCraft", "SCTile", "SCCable", "SCSound"})
 public class SoundCraft {
 
 	@Instance("SoundCraft")
@@ -116,7 +119,28 @@ public class SoundCraft {
 	
 	@PostInit
 	public void postInit(FMLPostInitializationEvent event) {
-		System.out.println(Item.itemsList[SoundCraftConfig.soundCableIronID + 256].getCreativeTab());
+		if(FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) {
+			for(int i = 0; i < Item.itemsList.length; i++) {
+				if(Item.itemsList[i] != null) {
+					if(Item.itemsList[i] instanceof ItemRecord) {
+						RecordRegistry.registerRecord(((ItemRecord) Item.itemsList[i]).recordName);
+					}
+				}
+			}
+		} else {
+			RecordRegistry.registerRecord("11", 71.11);
+			RecordRegistry.registerRecord("13", 178.09);
+			RecordRegistry.registerRecord("cat", 185.34);
+			RecordRegistry.registerRecord("blocks", 345.91);
+			RecordRegistry.registerRecord("chirp", 185.58);
+			RecordRegistry.registerRecord("far", 174.46);
+			RecordRegistry.registerRecord("mall", 197.22);
+			RecordRegistry.registerRecord("mellohi", 96.20);
+			RecordRegistry.registerRecord("stal", 150.86);
+			RecordRegistry.registerRecord("strad", 188.17);
+			RecordRegistry.registerRecord("ward", 251.39);
+			RecordRegistry.registerRecord("wait", 237.89);
+		}
 		
 		GameRegistry.addRecipe(new ItemStack(circuit), 
 			" i ", "rgr", " i ", 'i', Item.ingotIron, 'r', Item.redstone, 'g', Item.ingotGold 

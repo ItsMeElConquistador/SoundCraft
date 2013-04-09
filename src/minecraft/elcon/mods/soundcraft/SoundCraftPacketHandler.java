@@ -4,17 +4,21 @@ import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet250CustomPayload;
+import net.minecraft.world.WorldServer;
 
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteStreams;
 
 import cpw.mods.fml.common.network.IPacketHandler;
+import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
 import elcon.mods.soundcraft.sounds.Sound;
 import elcon.mods.soundcraft.sounds.SoundDisc;
+import elcon.mods.soundcraft.tileentities.TileEntityAdvancedJukebox;
 import elcon.mods.soundcraft.tileentities.TileEntitySoundCable;
 
 public class SoundCraftPacketHandler implements IPacketHandler {
@@ -28,11 +32,18 @@ public class SoundCraftPacketHandler implements IPacketHandler {
 		case 0:
 			handlePlaySound(dat);
 			break;
-		case 50: 
+		case 20: 
 			handleTileEntitySoundCable(dat);
 			break;
-		case 51:
+		case 21:
+			handleTileEntityAdvancedJukebox(dat);
+			break;
+		case 40:
 			handleTileEntityUpdate(dat);
+			break;
+		//server side
+		case 50:
+			handleJukeboxUpdate(dat);
 			break;
 		}
 	}
@@ -101,13 +112,34 @@ public class SoundCraftPacketHandler implements IPacketHandler {
 		int y = dat.readInt();
 		int z = dat.readInt();
 		
-		TileEntitySoundCable te = new TileEntitySoundCable();
+		TileEntitySoundCable te = (TileEntitySoundCable) Minecraft.getMinecraft().theWorld.getBlockTileEntity(x, y, z);
+		if(te == null) {
+			te = new TileEntitySoundCable();
+		}
+		
 		te.color = dat.readInt();
 		for(int i = 0; i < 6; i++) {
 			te.directions[i] = dat.readBoolean();
 		}
 		
 		Minecraft.getMinecraft().theWorld.setBlockTileEntity(x, y, z, te);
+	}
+	
+	public void handleTileEntityAdvancedJukebox(ByteArrayDataInput dat) {
+		int x = dat.readInt();
+		int y = dat.readInt();
+		int z = dat.readInt();
+		
+		TileEntityAdvancedJukebox te = (TileEntityAdvancedJukebox) Minecraft.getMinecraft().theWorld.getBlockTileEntity(x, y, z);
+		if(te == null) {
+			te = new TileEntityAdvancedJukebox();
+		}		
+		for(int i = 0; i < 8; i++) {
+			te.next[i] = dat.readBoolean();
+			te.loop[i] = dat.readBoolean();
+			te.loopTimes[i] = dat.readByte();
+		}
+		Minecraft.getMinecraft().theWorld.setBlockTileEntity(x, y, z, te);		
 	}
 	
 	public void handleTileEntityUpdate(ByteArrayDataInput dat) {
@@ -122,7 +154,7 @@ public class SoundCraftPacketHandler implements IPacketHandler {
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		DataOutputStream dos = new DataOutputStream(bos);
 		try {
-			dos.writeByte(51);
+			dos.writeByte(40);
 			dos.writeInt(x);
 			dos.writeInt(y);
 			dos.writeInt(z);
@@ -136,5 +168,59 @@ public class SoundCraftPacketHandler implements IPacketHandler {
 		packet.length = bos.size();
 		packet.isChunkDataPacket = true;
 		player.playerNetServerHandler.sendPacketToPlayer(packet);
+	}
+	
+	
+	public void handleJukeboxUpdate(ByteArrayDataInput dat) {
+		int x = dat.readInt();
+		int y = dat.readInt();
+		int z = dat.readInt();
+		int dim = dat.readInt();
+		
+		WorldServer world = SoundCraft.proxy.getMCServer().worldServerForDimension(dim);
+		TileEntityAdvancedJukebox te = (TileEntityAdvancedJukebox) world.getBlockTileEntity(x, y, z);
+		if(te == null) {
+			te = new TileEntityAdvancedJukebox();
+		}		
+		for(int i = 0; i < 8; i++) {
+			te.next[i] = dat.readBoolean();
+			te.loop[i] = dat.readBoolean();
+			te.loopTimes[i] = dat.readByte();
+		}
+		world.setBlockTileEntity(x, y, z, te);
+		
+		if(world != null && world.playerEntities != null) {
+			for(Object o : world.playerEntities) {
+				if(o != null && o instanceof EntityPlayerMP) {
+					EntityPlayerMP player = (EntityPlayerMP) o;
+					sendJukeboxUpdate(player, x, y, z, te.next, te.loop, te.loopTimes);
+				}
+			}
+		}
+	}
+	
+	public void sendJukeboxUpdate(EntityPlayerMP player, int x, int y, int z, boolean[] next, boolean[] loop, byte[] loopTimes) {
+		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+		DataOutputStream dos = new DataOutputStream(bos);
+		try {
+			dos.writeByte(21);
+			dos.writeInt(x);
+			dos.writeInt(y);
+			dos.writeInt(z);
+			
+			for(int i = 0; i < 8; i++) {
+				dos.writeBoolean(next[i]);
+				dos.writeBoolean(loop[i]);
+				dos.writeByte(loopTimes[i]);
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		Packet250CustomPayload pkt = new Packet250CustomPayload();
+		pkt.channel = "SCTile";
+		pkt.data = bos.toByteArray();
+		pkt.length = bos.size();
+		pkt.isChunkDataPacket = true;
+		player.playerNetServerHandler.sendPacketToPlayer(pkt);		
 	}
 }
